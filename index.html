@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>每日國學日記</title>
+<meta name="theme-color" content="#a07a6f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="每日國學">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<style>
+  :root{
+    --paper:#e4ded3; --paper2:#d8d1c4; --card:#efeae2;
+    --ink:#4b453e; --ink-soft:#8c8377; --line:#cec5b6;
+    --seal:#a07a6f; --gold:#a99a78;
+    --kai:"DFKai-SB","標楷體","BiauKai","KaiTi","Kaiti TC","Noto Serif TC","Songti TC",serif;
+    --sans:"Noto Sans TC","Microsoft JhengHei","PingFang TC","Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:var(--sans); color:var(--ink); line-height:1.8;
+    background:
+      radial-gradient(120% 80% at 50% -10%, #efe9de 0%, var(--paper) 55%, var(--paper2) 100%) fixed;
+    min-height:100vh; padding:28px 16px 64px;
+  }
+  .wrap{max-width:720px;margin:0 auto;position:relative}
+
+  header.top{text-align:center;position:relative;margin-bottom:18px}
+  header.top h1{
+    font-family:var(--kai); font-size:30px; letter-spacing:.35em;
+    margin:0 0 4px; color:var(--ink); text-indent:.35em;
+  }
+  header.top .sub{font-size:13px;color:var(--ink-soft);letter-spacing:.25em}
+  .datebar{
+    display:flex;align-items:center;justify-content:center;gap:14px;
+    margin-top:12px;font-size:14px;color:var(--ink-soft);flex-wrap:wrap
+  }
+  .datebar .d{font-family:var(--kai);font-size:17px;color:var(--ink);letter-spacing:.05em}
+  .streak{
+    font-size:12.5px;color:#fff;background:var(--seal);
+    padding:2px 10px;border-radius:20px;letter-spacing:.05em
+  }
+  .seal{
+    position:absolute;right:2px;top:-4px;width:46px;height:46px;
+    background:var(--seal);color:#fff;border-radius:7px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--kai);font-size:15px;line-height:1.05;
+    writing-mode:vertical-rl;letter-spacing:.04em;
+    box-shadow:0 2px 6px rgba(110,86,78,.28);opacity:.95;transform:rotate(2deg)
+  }
+
+  .card{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:26px 26px 18px;
+    box-shadow:0 10px 30px -18px rgba(80,60,30,.5);
+    position:relative;overflow:hidden
+  }
+  .card::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
+    background:linear-gradient(var(--gold),var(--seal))
+  }
+  .ribbon{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .cat{
+    font-family:var(--kai);font-size:14px;color:#fff;background:var(--seal);
+    padding:3px 12px;border-radius:4px;letter-spacing:.18em
+  }
+  .excerpt{
+    display:none;font-size:11.5px;color:var(--seal);border:1px solid var(--seal);
+    padding:1px 7px;border-radius:4px;letter-spacing:.1em
+  }
+  .excerpt.show{display:inline-block}
+  .meta{font-size:13.5px;color:var(--ink-soft);letter-spacing:.08em;margin-bottom:2px}
+  .title{font-family:var(--kai);font-size:25px;margin:2px 0 16px;letter-spacing:.06em}
+
+  .origin{
+    font-family:var(--kai);font-size:21px;line-height:2.05;color:var(--ink);
+    white-space:pre-line;margin:0 0 14px;letter-spacing:.04em
+  }
+  .origin.center{text-align:center}
+  .origin.left{text-align:left}
+
+  .best{
+    background:rgba(160,122,111,.12);border-left:3px solid var(--seal);
+    padding:9px 14px;border-radius:0 6px 6px 0;margin:0 0 18px;
+    font-family:var(--kai);font-size:17px;color:#8a6358;letter-spacing:.05em
+  }
+  .best b{color:var(--seal);font-weight:400;margin-right:8px;font-size:13px;letter-spacing:.1em}
+
+  details{border-top:1px solid var(--line);padding:4px 0}
+  details:last-of-type{border-bottom:1px solid var(--line)}
+  summary{
+    cursor:pointer;list-style:none;padding:8px 2px;font-size:14.5px;
+    color:var(--ink-soft);letter-spacing:.12em;font-family:var(--kai);
+    display:flex;align-items:center;gap:8px;user-select:none
+  }
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"＋";color:var(--gold);font-size:15px;width:14px}
+  details[open] summary::before{content:"－"}
+  details[open] summary{color:var(--ink)}
+  .sec{padding:2px 4px 14px 24px;font-size:15px;color:#3f3a31;line-height:1.95}
+  #d-reflect .sec{color:var(--seal)}
+  .toolrow{display:flex;gap:8px;margin:6px 0 14px}
+  .speak{
+    background:transparent;border:1px solid var(--line);color:var(--ink-soft);
+    font-family:var(--sans);font-size:13px;padding:4px 12px;border-radius:18px;cursor:pointer
+  }
+  .speak:hover{border-color:var(--gold);color:var(--ink)}
+
+  .diary{
+    margin-top:20px;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:20px 22px;box-shadow:0 10px 30px -20px rgba(80,60,30,.5)
+  }
+  .diary h3{
+    font-family:var(--kai);font-size:18px;margin:0 0 10px;letter-spacing:.12em;
+    display:flex;align-items:center;justify-content:space-between
+  }
+  .savestate{font-family:var(--sans);font-size:12px;color:var(--gold);font-weight:400;letter-spacing:0}
+  textarea#entry{
+    width:100%;min-height:150px;resize:vertical;border:1px solid var(--line);
+    border-radius:8px;background:#fffdf7;padding:14px;font-family:var(--kai);
+    font-size:16px;line-height:1.9;color:var(--ink);letter-spacing:.03em
+  }
+  textarea#entry:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(169,134,63,.12)}
+  .diary-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12.5px;color:var(--ink-soft)}
+
+  nav.controls{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+  nav.controls button{
+    font-family:var(--sans);font-size:14px;padding:8px 16px;border-radius:22px;cursor:pointer;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);letter-spacing:.05em
+  }
+  nav.controls button:hover:not(:disabled){border-color:var(--gold);background:#fff}
+  nav.controls button:disabled{opacity:.4;cursor:default}
+  #today{background:var(--seal);color:#fff;border-color:var(--seal)}
+
+  .mask{
+    position:fixed;inset:0;background:rgba(40,30,18,.45);display:none;
+    align-items:center;justify-content:center;padding:18px;z-index:30
+  }
+  .mask.show{display:flex}
+  .modal{
+    background:var(--card);border-radius:14px;max-width:520px;width:100%;
+    max-height:82vh;overflow:auto;padding:22px;box-shadow:0 20px 60px -20px rgba(0,0,0,.5)
+  }
+  .modal h2{font-family:var(--kai);font-size:20px;margin:0 0 14px;letter-spacing:.1em;display:flex;justify-content:space-between;align-items:center}
+  .modal h2 .x{cursor:pointer;color:var(--ink-soft);font-size:22px;line-height:1}
+  .hist{list-style:none;margin:0;padding:0}
+  .hist li{
+    padding:11px 12px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;
+    cursor:pointer;background:#fffdf7;transition:.15s
+  }
+  .hist li:hover{border-color:var(--gold);transform:translateY(-1px)}
+  .hist .hd{font-family:var(--kai);font-size:14px;color:var(--ink)}
+  .hist .hp{font-size:12px;color:var(--ink-soft);margin-top:2px}
+  .hist .hx{font-size:13px;color:#4a4338;margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .empty{color:var(--ink-soft);font-size:14px;text-align:center;padding:20px}
+  .modal-foot{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  .modal-foot button,.modal-foot label{
+    font-family:var(--sans);font-size:13px;padding:6px 13px;border-radius:18px;cursor:pointer;
+    border:1px solid var(--line);background:#fffdf7;color:var(--ink)
+  }
+  .modal-foot button:hover,.modal-foot label:hover{border-color:var(--gold)}
+  footer.tip{text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:26px;letter-spacing:.05em;opacity:.8}
+
+  /* ---- 電子書元件 ---- */
+  :root{--fs:1}
+  .topctl{display:flex;gap:12px;justify-content:center;align-items:center;margin-top:10px;flex-wrap:wrap}
+  .progress{font-size:12.5px;color:var(--ink-soft);letter-spacing:.05em}
+  .progress b{color:var(--seal);font-weight:700}
+  .fontctl{display:inline-flex;gap:5px;align-items:center}
+  .fontctl button{width:30px;height:24px;border-radius:13px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;font-size:12px;font-family:var(--sans)}
+  .fontctl button:hover{border-color:var(--gold)}
+  .origin{font-size:calc(21px * var(--fs))}
+  .title{font-size:calc(25px * var(--fs))}
+  .best{font-size:calc(17px * var(--fs))}
+  .sec{font-size:calc(15px * var(--fs))}
+  .ribbon .star{margin-left:auto;background:transparent;border:none;cursor:pointer;font-size:22px;line-height:1;color:#cdbf9f;padding:0}
+  .ribbon .star.on{color:var(--gold)}
+  .bookbar{display:none;align-items:center;justify-content:space-between;gap:10px;background:rgba(169,154,120,.18);border:1px solid var(--line);border-radius:9px;padding:7px 8px 7px 14px;margin-bottom:14px;font-size:13px;color:var(--ink-soft);font-family:var(--kai);letter-spacing:.06em}
+  .bookbar.show{display:flex}
+  .bookbar button{font-family:var(--sans);font-size:13px;padding:5px 13px;border-radius:16px;border:1px solid var(--seal);background:var(--seal);color:#fff;cursor:pointer}
+  #card.turn{animation:pageturn .3s ease}
+  @keyframes pageturn{from{opacity:.2;transform:translateX(12px)}to{opacity:1;transform:none}}
+  .tabs{display:flex;gap:6px;margin-bottom:14px}
+  .tabs button{flex:1;font-family:var(--kai);font-size:15px;padding:8px;border-radius:8px;border:1px solid var(--line);background:#fffdf7;color:var(--ink-soft);cursor:pointer;letter-spacing:.1em}
+  .tabs button.on{background:var(--seal);color:#fff;border-color:var(--seal)}
+  .toc-chap{margin-bottom:16px}
+  .toc-chap h3{font-family:var(--kai);font-size:15px;margin:0 0 7px;color:var(--seal);letter-spacing:.12em;display:flex;justify-content:space-between;align-items:baseline}
+  .toc-chap h3 small{color:var(--ink-soft);font-size:11.5px;font-family:var(--sans);letter-spacing:0}
+  .toc-item{display:flex;align-items:center;gap:9px;padding:8px 11px;border:1px solid var(--line);border-radius:7px;margin-bottom:5px;cursor:pointer;background:#fffdf7;transition:.15s}
+  .toc-item:hover{border-color:var(--gold);transform:translateY(-1px)}
+  .toc-item .rd{color:var(--gold);font-size:13px;width:14px;text-align:center}
+  .toc-item .tk{font-family:var(--kai);color:var(--ink);flex:1;font-size:14.5px;letter-spacing:.04em}
+  .toc-item .ttag{font-size:11.5px;color:var(--ink-soft)}
+  .toc-item .mk{font-size:16px;color:#cdbf9f;width:18px;text-align:center}
+  .toc-item .mk.on{color:var(--gold)}
+
+  /* ---- 劃線 / 批註 ---- */
+  .toolrow{align-items:center}
+  .toolrow .hint{font-size:12px;color:var(--ink-soft);letter-spacing:.04em}
+  .origin mark.hl{background:rgba(188,176,142,.55);color:inherit;border-radius:2px;padding:0 1px;cursor:pointer}
+  .origin mark.hl.hasnote{background:rgba(160,122,111,.22);border-bottom:2px solid var(--seal)}
+  .selbar{position:absolute;display:none;z-index:40;background:#544c44;border-radius:9px;box-shadow:0 5px 16px rgba(0,0,0,.3);white-space:nowrap}
+  .selbar button{background:transparent;border:none;color:#fff;font-family:var(--sans);font-size:13px;padding:9px 15px;cursor:pointer;letter-spacing:.05em}
+  .selbar button:hover{background:rgba(255,255,255,.13)}
+  .selbar button+button{border-left:1px solid rgba(255,255,255,.16)}
+  .notequote{font-family:var(--kai);color:var(--seal);font-size:16px;margin-bottom:10px;padding:8px 12px;background:rgba(160,122,111,.12);border-left:3px solid var(--seal);border-radius:0 6px 6px 0}
+  #noteText{width:100%;min-height:120px;border:1px solid var(--line);border-radius:8px;background:#fffdf7;padding:12px;font-family:var(--kai);font-size:15px;line-height:1.9;color:var(--ink);resize:vertical;letter-spacing:.03em}
+  #noteText:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(169,134,63,.12)}
+  #noteDel{color:var(--seal);border-color:var(--seal)}
+
+  /* ---- 手寫 ---- */
+  .readblock{position:relative}
+  #inkpad{position:absolute;inset:0;pointer-events:none;z-index:5;touch-action:none}
+  .card.inking #inkpad{pointer-events:auto;cursor:crosshair}
+  .card.inking .readblock{outline:2px dashed rgba(169,134,63,.55);outline-offset:6px;border-radius:6px}
+  .inkbar{display:none;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:14px;padding:8px 10px;background:#544c44;border-radius:10px}
+  .card.inking .inkbar{display:flex}
+  .inkbar button{background:rgba(255,255,255,.1);border:1px solid transparent;color:#fff;font-family:var(--sans);font-size:13px;padding:5px 12px;border-radius:14px;cursor:pointer;line-height:1.2}
+  .inkbar button:hover{background:rgba(255,255,255,.2)}
+  .inkbar button.on{border-color:var(--gold)}
+  .inkbar #inkRed{color:#c89a8d}
+  .inkbar #inkDone{background:var(--seal);margin-left:auto}
+
+  /* ---- 隨筆自由畫布 ---- */
+  .diary h3{flex-wrap:wrap;gap:8px}
+  .diary-modes{display:inline-flex;gap:5px;font-family:var(--sans)}
+  .diary-modes button{font-size:12px;padding:3px 11px;border-radius:13px;border:1px solid var(--line);background:#fffdf7;color:var(--ink-soft);cursor:pointer}
+  .diary-modes button.on{background:var(--seal);color:#fff;border-color:var(--seal)}
+  .dtools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}
+  .dtools .dc{width:22px;height:22px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+  .dtools .dc.on{border-color:var(--ink)}
+  .dtools .dsep{width:1px;height:18px;background:var(--line);margin:0 3px}
+  .dtools button:not(.dc){font-family:var(--sans);font-size:12.5px;padding:4px 11px;border-radius:13px;border:1px solid var(--line);background:#fffdf7;color:var(--ink);cursor:pointer}
+  .dtools button:not(.dc):hover{border-color:var(--gold)}
+  .dtools button:not(.dc).on{border-color:var(--gold);background:#fff}
+  #diarypad{width:100%;height:340px;display:block;border:1px solid var(--line);border-radius:8px;cursor:crosshair;touch-action:none;background:repeating-linear-gradient(#fffdf7,#fffdf7 33px,#efe7d4 34px)}
+  .histimg{max-width:100%;border:1px solid var(--line);border-radius:6px;margin-top:8px;background:#fffdf7;display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="seal">日新</div>
+    <h1>每日國學</h1>
+    <div class="sub">一 日 一 篇 · 涵 養 心 性</div>
+    <div class="datebar">
+      <span class="d" id="dateText">—</span>
+      <span class="streak" id="streak">連續 0 天</span>
+    </div>
+    <div class="topctl">
+      <span class="progress" id="progress">已讀 <b>0</b> ／ 共 0 篇</span>
+      <span class="fontctl"><button id="fsDown" title="縮小字級">A－</button><button id="fsUp" title="放大字級">A＋</button></span>
+    </div>
+  </header>
+
+  <article class="card" id="card">
+    <div class="bookbar" id="bookbar">
+      <span id="bookbarText">藏書閣閱讀</span>
+      <button id="backToday">返回今日 ▶</button>
+    </div>
+    <div class="inkbar" id="inkbar">
+      <button id="inkBlack" class="on">墨</button>
+      <button id="inkRed">朱</button>
+      <button id="inkThin">細</button>
+      <button id="inkMid" class="on">中</button>
+      <button id="inkThick">粗</button>
+      <button id="inkEraser">橡皮</button>
+      <button id="inkUndo">↶ 復原</button>
+      <button id="inkClear">清除</button>
+      <button id="inkDone">✓ 完成</button>
+    </div>
+    <div class="readblock" id="readblock">
+      <div class="ribbon">
+        <span class="cat" id="cat">—</span>
+        <span class="excerpt" id="excerptTag">節選</span>
+        <button class="star" id="star" title="加入書籤">☆</button>
+      </div>
+      <div class="meta" id="meta">—</div>
+      <div class="title" id="title">—</div>
+      <div class="origin" id="origin"></div>
+      <div class="best" id="best"><b>佳句</b><span id="bestText"></span></div>
+      <div class="toolrow"><button class="speak" id="speak">🔊 朗讀原文</button><button class="speak" id="inkToggle">✍ 手寫</button><span class="hint">選取可劃線・批註，或按「手寫」直接書寫</span></div>
+      <canvas id="inkpad"></canvas>
+    </div>
+
+    <details id="d-notes"><summary>注釋</summary><div class="sec" id="notes"></div></details>
+    <details id="d-trans"><summary>白話翻譯</summary><div class="sec" id="trans"></div></details>
+    <details id="d-appr"><summary>賞析</summary><div class="sec" id="appr"></div></details>
+    <details id="d-bio"><summary>作者與背景</summary><div class="sec" id="bio"></div></details>
+    <details id="d-reflect" open><summary>今日一問</summary><div class="sec" id="reflect"></div></details>
+  </article>
+
+  <section class="diary">
+    <h3><span>今日心得 · 隨筆 <span class="savestate" id="saveState"></span></span>
+      <span class="diary-modes"><button id="modeDraw" class="on">✍ 畫布</button><button id="modeType">⌨ 打字</button></span>
+    </h3>
+    <div id="drawWrap">
+      <div class="dtools">
+        <button class="dc on" data-c="#3a352f" style="background:#3a352f" title="墨"></button>
+        <button class="dc" data-c="#9c6a5e" style="background:#9c6a5e" title="赭"></button>
+        <button class="dc" data-c="#7d8a6a" style="background:#7d8a6a" title="苔綠"></button>
+        <button class="dc" data-c="#6f7f8c" style="background:#6f7f8c" title="霧藍"></button>
+        <button class="dc" data-c="#b08a4f" style="background:#b08a4f" title="赭金"></button>
+        <span class="dsep"></span>
+        <button id="dThin">細</button><button id="dMid" class="on">中</button><button id="dThick">粗</button>
+        <button id="dEraser">橡皮</button><button id="dUndo">↶ 復原</button><button id="dClear">清除</button>
+      </div>
+      <canvas id="diarypad"></canvas>
+    </div>
+    <textarea id="entry" placeholder="順著上方「今日一問」，寫下今天的心得感想；也可以記下今天的心情與生活……" style="display:none"></textarea>
+    <div class="diary-foot"><span id="count">0 字</span><span>自動儲存於此電腦</span></div>
+  </section>
+
+  <nav class="controls">
+    <button id="prev">◀ 前一日</button>
+    <button id="todayBtn">今天</button>
+    <button id="next">後一日 ▶</button>
+    <button id="tocBtn">📖 目錄</button>
+  </nav>
+
+  <footer class="tip">每晚 20:45 自動開啟 · 日記存於本機瀏覽器 · 記得偶爾「回顧」裡匯出備份</footer>
+</div>
+
+<div class="mask" id="mask">
+  <div class="modal">
+    <h2 id="modalTitle">目錄 <span class="x" id="closeModal">×</span></h2>
+    <div class="tabs">
+      <button id="tabToc" class="on">目錄 · 藏書</button>
+      <button id="tabHist">回顧 · 隨筆</button>
+    </div>
+    <div id="tocPane"></div>
+    <div id="histPane" style="display:none">
+      <ul class="hist" id="histList"></ul>
+      <div class="empty" id="histEmpty" style="display:none">還沒有任何隨筆，今天就從一行開始吧。</div>
+      <div class="modal-foot">
+        <button id="expMd">匯出 Markdown</button>
+        <button id="expJson">備份檔（JSON）</button>
+        <label>還原備份<input type="file" id="impJson" accept=".json" hidden></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="selbar" id="selbar">
+  <button id="mkLine">✎ 劃線</button>
+  <button id="mkNote">✎ 劃線＋批註</button>
+</div>
+
+<div class="mask" id="noteMask">
+  <div class="modal" style="max-width:430px">
+    <h2 id="noteTitle">批註 <span class="x" id="noteClose">×</span></h2>
+    <div id="noteQuote" class="notequote"></div>
+    <textarea id="noteText" placeholder="在這句上寫下你的批註……"></textarea>
+    <div class="modal-foot">
+      <button id="noteSave">儲存批註</button>
+      <button id="noteDel">刪除此標記</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- 篇目庫（精選·可靠；漢賦為名篇節選） ---------- */
+const CORPUS = {
+  yuefu:{label:"樂府詩",items:[
+    {title:"江南",dynasty:"漢",author:"漢樂府（佚名）",
+     text:"江南可採蓮，蓮葉何田田。\n魚戲蓮葉間。\n魚戲蓮葉東，魚戲蓮葉西，\n魚戲蓮葉南，魚戲蓮葉北。",
+     best:"江南可採蓮，蓮葉何田田。",
+     notes:"田田：蓮葉茂盛、相連的樣子。戲：嬉遊。",
+     trans:"江南又到了採蓮時節，蓮葉層層疊疊、那樣繁茂。魚兒在蓮葉間穿梭嬉戲——一會兒游到東，一會兒游到西，一會兒往南，一會兒往北。",
+     appr:"全篇不著一字寫人，只寫魚戲蓮葉。東西南北的迴環複沓，便把採蓮的歡快與江南水鄉的生機鋪展開來。樂府民歌的天真與韻律之美，盡在這重複的節奏裡。",
+     bio:"漢樂府是漢代官府採集、配樂演唱的民間歌謠，多出自無名氏之手，題材貼近百姓生活，語言質樸自然，是中國詩歌由四言走向五言的重要橋樑。",
+     reflect:"同樣的句式只換一個方位字，便有了流動的生命感。你今天的生活裡，有沒有哪件重複的小事，其實也藏著值得玩味的韻律？"},
+    {title:"長歌行",dynasty:"漢",author:"漢樂府（佚名）",
+     text:"青青園中葵，朝露待日晞。\n陽春布德澤，萬物生光輝。\n常恐秋節至，焜黃華葉衰。\n百川東到海，何時復西歸？\n少壯不努力，老大徒傷悲。",
+     best:"少壯不努力，老大徒傷悲。",
+     notes:"晞：曬乾。德澤：恩惠。焜黃：草木枯黃。華：同「花」。",
+     trans:"園中葵菜青翠，葉上朝露等著日光曬乾。溫暖的春天廣布恩澤，萬物都煥發光彩。卻常擔心秋天一到，花葉便枯黃凋零。百川向東奔流入海，何時才能再往西回流？人在少壯時若不努力，年老時只能空自悲傷。",
+     appr:"由園葵朝露、陽春萬物，寫到秋來凋零、江水不返，層層鋪墊，最後逼出「少壯不努力，老大徒傷悲」的千古警句。以自然時序喻人生，勸勉惜時，懇切而不說教。",
+     bio:"「長歌行」為樂府舊題，多寓人生感慨。此篇以惜時勉學著稱，千百年來常被引為勸學箴言。",
+     reflect:"「百川東到海，何時復西歸」——時間不可逆。如果把今天當作不會再回來的一天，你最想把它用在哪裡？"},
+    {title:"敕勒歌",dynasty:"北朝",author:"北朝樂府（佚名）",
+     text:"敕勒川，陰山下。\n天似穹廬，籠蓋四野。\n天蒼蒼，野茫茫，\n風吹草低見牛羊。",
+     best:"風吹草低見牛羊。",
+     notes:"敕勒：北方游牧民族。陰山：今內蒙古一帶。穹廬：游牧民族的氈帳，圓頂似天。見（xiàn）：同「現」，顯露。",
+     trans:"敕勒族居住的草原，就在陰山腳下。天空像一頂巨大的氈帳，籠罩著四方曠野。天色蒼蒼，原野茫茫，一陣風吹過，牧草低伏，露出成群的牛羊。",
+     appr:"短短二十七字，由天到地、由靜到動，最後「風吹草低見牛羊」一句把草原的遼闊與生機一筆寫活。氣象雄渾、率真天然，是北朝民歌的代表，也是寫草原的千古絕唱。",
+     bio:"北朝樂府是南北朝時北方民族的民歌，風格剛健質樸，與柔婉的南朝民歌相映成趣。〈敕勒歌〉相傳由鮮卑語譯成漢語，猶存草原的曠放之氣。",
+     reflect:"「天蒼蒼，野茫茫」是一種把自己放進天地之間的遼闊。今天有沒有一個瞬間，讓你覺得世界很大、心也跟著寬了？"},
+    {title:"上邪",dynasty:"漢",author:"漢樂府（佚名）",
+     text:"上邪！\n我欲與君相知，長命無絕衰。\n山無陵，江水為竭，\n冬雷震震，夏雨雪，\n天地合，乃敢與君絕！",
+     best:"山無陵，江水為竭……天地合，乃敢與君絕！",
+     notes:"上邪（yé）：天啊。上指天。相知：相親相愛。陵：山峰。雨（yù）雪：降雪。乃敢：才敢。",
+     trans:"老天啊！我願與你相愛，讓這份情長久不衰。除非高山夷為平地，江水枯竭斷流，冬天響起驚雷，夏天落下大雪，天與地合在一起——到那時，我才敢與你斷絕！",
+     appr:"一連列舉五件絕不可能發生的事，以「不可能」反襯愛情的「絕不變」。情感熾烈奔放、毫無保留，是中國古代最動人的愛情誓言之一。",
+     bio:"〈上邪〉屬漢樂府〈鐃歌〉，出自民間女子之口，直率大膽、不假雕飾，正是漢樂府「感於哀樂、緣事而發」的本色。",
+     reflect:"古人用「天地合」來丈量一份情的重量。在你心裡，有沒有什麼是你願意用「絕不」去守護的？"},
+    {title:"木蘭詩",dynasty:"北朝",author:"北朝樂府（佚名）",
+     text:"唧唧復唧唧，木蘭當戶織。\n不聞機杼聲，惟聞女歎息。\n問女何所思，問女何所憶。\n女亦無所思，女亦無所憶。\n昨夜見軍帖，可汗大點兵，\n軍書十二卷，卷卷有爺名。\n阿爺無大兒，木蘭無長兄，\n願為市鞍馬，從此替爺征。\n東市買駿馬，西市買鞍韉，\n南市買轡頭，北市買長鞭。\n旦辭爺娘去，暮宿黃河邊，\n不聞爺娘喚女聲，但聞黃河流水鳴濺濺。\n旦辭黃河去，暮至黑山頭，\n不聞爺娘喚女聲，但聞燕山胡騎鳴啾啾。\n萬里赴戎機，關山度若飛。\n朔氣傳金柝，寒光照鐵衣。\n將軍百戰死，壯士十年歸。\n歸來見天子，天子坐明堂。\n策勳十二轉，賞賜百千強。\n可汗問所欲，木蘭不用尚書郎，\n願馳千里足，送兒還故鄉。\n爺娘聞女來，出郭相扶將；\n阿姊聞妹來，當戶理紅妝；\n小弟聞姊來，磨刀霍霍向豬羊。\n開我東閣門，坐我西閣床，\n脫我戰時袍，著我舊時裳，\n當窗理雲鬢，對鏡帖花黃。\n出門看火伴，火伴皆驚忙：\n同行十二年，不知木蘭是女郎。\n雄兔腳撲朔，雌兔眼迷離；\n雙兔傍地走，安能辨我是雄雌？",
+     best:"將軍百戰死，壯士十年歸。",
+     notes:"軍帖：徵兵文書。可汗（kè hán）：北方民族對君主的稱呼。鞍韉（ān jiān）：馬鞍與墊子。金柝（tuò）：軍中報更的器具。策勳十二轉：記功多級。撲朔、迷離：形容難以分辨。",
+     trans:"織布聲一陣陣，木蘭對門而織。忽然聽不見機杼聲，只聽見女兒聲聲歎息——因可汗大舉徵兵、父親年邁、家無長男，木蘭遂買馬備鞍，代父從軍。她奔赴萬里戰場、越過重重關山，多年征戰，將軍戰死、壯士生還。立功歸來，她不要high官厚祿，只願騎上快馬回故鄉。家人歡喜相迎，她換回舊衣、對鏡梳妝；同行十二年的夥伴這才驚覺：木蘭原來是女兒身！正如雄雌兩兔一起奔跑，又怎分得清誰雄誰雌？",
+     appr:"敘事民歌的巔峰：以鋪排、複沓、誇張，寫木蘭代父從軍、功成不居、辭官還鄉的傳奇。剛健質樸中見女子的孝勇與灑脫，「將軍百戰死，壯士十年歸」更以十字寫盡十年烽火。木蘭遂成中華最動人的巾幗形象。",
+     bio:"〈木蘭詩〉是北朝樂府民歌的代表，與〈孔雀東南飛〉並稱「樂府雙璧」。故事源於北方戰亂的年代，經民間傳唱與文人潤色而成，千百年來改編不絕。",
+     reflect:"木蘭立了大功，卻只想回家做回自己。在你心裡，「成就一番事業」與「回到平凡的自己」，哪一個更接近你真正要的？"},
+    {title:"十五從軍征",dynasty:"漢",author:"漢樂府（佚名）",
+     text:"十五從軍征，八十始得歸。\n道逢鄉里人：家中有阿誰？\n遙看是君家，松柏冢纍纍。\n兔從狗竇入，雉從梁上飛。\n中庭生旅穀，井上生旅葵。\n舂穀持作飯，採葵持作羹。\n羹飯一時熟，不知貽阿誰。\n出門東向看，淚落沾我衣。",
+     best:"出門東向看，淚落沾我衣。",
+     notes:"阿誰：誰。冢（zhǒng）：墳墓。纍纍：一座連一座。狗竇：牆上給狗出入的洞。旅穀、旅葵：野生的穀與葵。舂（chōng）：搗去穀殼。貽（yí）：贈與。",
+     trans:"十五歲就被徵去從軍，直到八十歲才得返鄉。路上遇見同鄉人，問：「我家裡還有誰？」「遠遠望去那就是你家——只剩一片松柏與纍纍墳塚了。」走進家門：野兔從狗洞鑽進，野雞在屋梁上飛；庭院長滿野穀，井邊長滿野葵。他舂穀做飯、採葵煮羹，飯羹很快熟了，卻不知道要端給誰吃。走出門向東遠望，老淚縱橫，沾濕了衣裳。",
+     appr:"以一個老兵還鄉的白描，控訴兵役之酷：六十五年戎馬，換來的是滿目荒墳。不著一句怨言，而「羹飯一時熟，不知貽阿誰」的孤寂、「淚落沾我衣」的悲涼，力透紙背，是漢樂府反戰名篇。",
+     bio:"漢樂府「感於哀樂、緣事而發」，常為底層百姓代言。此篇寫盡長期征戍下小人物的家破人亡，與〈木蘭詩〉的傳奇恰成沉痛的對照。",
+     reflect:"他失去的，是再也回不去的家與人。今天若還來得及回一通電話、見一次面，你最想留住的是哪一段關係？"}
+  ]},
+  hanfu:{label:"漢賦",items:[
+    {title:"歸田賦",dynasty:"東漢",author:"張衡",excerpt:true,
+     text:"遊都邑以永久，無明略以佐時；\n徒臨川以羨魚，俟河清乎未期。\n感蔡子之慷慨，從唐生以決疑。\n諒天道之微昧，追漁父以同嬉。\n超埃塵以遐逝，與世事乎長辭。\n於是仲春令月，時和氣清；\n原隰鬱茂，百草滋榮。\n王雎鼓翼，倉庚哀鳴；\n交頸頡頏，關關嚶嚶。\n於焉逍遙，聊以娛情。",
+     best:"超埃塵以遐逝，與世事乎長辭。",
+     notes:"遊都邑：在京城遊宦。佐時：匡輔時政。臨川羨魚：空有願望而無行動。俟河清：等黃河變清，喻時機難待。蔡子：蔡澤。唐生：唐舉，善相術。原隰（xí）：高低田地。倉庚：黃鸝。〔節選前二章〕",
+     trans:"在京城遊宦已久，卻無高明的謀略匡輔時政；空對河水羨慕游魚，要等黃河水清卻遙遙無期。感於蔡澤的慷慨，便效他求唐舉卜問決疑；又想天道幽微難明，不如追隨漁父同享閒適，超脫塵世、遠遠離去。於是正當仲春二月，天和氣清，原野草木蔥鬱、百草滋長；雎鳩振翅，黃鸝鳴叫，交頸翻飛、關關相和。就在這裡逍遙自在，姑且自娛。",
+     appr:"張衡厭倦官場，作此賦抒寫歸隱田園之志。這一節寫仲春郊野的生機，色彩明麗、聲韻和諧，是漢賦由鋪張的大賦轉向清新「抒情小賦」的代表，開後世田園文學先聲。",
+     bio:"張衡（78–139）東漢科學家兼文學家，發明渾天儀、地動儀，又長於辭賦。〈歸田賦〉短小清麗，一改漢大賦堆砌之風，在賦史上意義重大。",
+     reflect:"一位能造地動儀的大科學家，也嚮往歸返田園的清淨。你心裡是否也有一處「想歸去」的田園？它是什麼模樣？"},
+    {title:"登樓賦",dynasty:"漢末·建安",author:"王粲",excerpt:true,
+     text:"登茲樓以四望兮，聊暇日以銷憂。\n覽斯宇之所處兮，實顯敞而寡仇。\n挾清漳之通浦兮，倚曲沮之長洲。\n背墳衍之廣陸兮，臨皋隰之沃流。",
+     best:"登茲樓以四望兮，聊暇日以銷憂。",
+     notes:"茲樓：此樓。寡仇：少有匹敵。漳、沮：水名。墳衍：水邊高地與平地。皋隰：水邊低濕之地。〔此為節選〕",
+     trans:"登上這座樓四面眺望啊，姑且趁閒暇排遣憂愁。看這樓所處的位置啊，實在開闊敞亮、少有能比。它挾帶著清澈的漳水支流，依傍著曲折的沮水長洲；背靠廣闊的高地平原，前臨水邊肥沃的田流。",
+     appr:"王粲流寓荊州、登樓望遠，借眼前壯闊之景反襯去國懷鄉的憂思。情景交融、清峻流暢，是建安抒情賦的名篇，也讓「登樓」成為後世遊子思鄉的典故。",
+     bio:"王粲（177–217）「建安七子」中成就最高者。身逢漢末離亂，避難荊州十餘年不得志，〈登樓賦〉即作於此時，字裡行間是亂世文人的飄零之感。",
+     reflect:"同樣的好風景，心裡裝著憂愁時看來卻別有滋味。你有沒有過「景色很美，心事很重」的時刻？"},
+    {title:"鵩鳥賦（節選）",dynasty:"漢",author:"賈誼",excerpt:true,
+     text:"禍兮福所倚，福兮禍所伏；\n憂喜聚門，吉凶同域。\n其生兮若浮，其死兮若休；\n澹乎若深淵之靜，泛乎若不繫之舟。",
+     best:"其生兮若浮，其死兮若休。",
+     notes:"鵩（fú）：貓頭鷹一類的鳥，古人視為不祥。倚、伏：依傍、潛藏。澹（dàn）：安靜。泛：漂浮。不繫之舟：不被繩索拴住的船。〔節選〕",
+     trans:"禍啊，是福所依傍的；福啊，是禍所潛藏的。憂與喜同聚一門，吉與凶共處一域。人活著就像漂浮，死去就像安歇；心境安靜得像沉沉的深淵，悠然得像一艘不被拴住、隨水漂流的小船。",
+     appr:"賈誼貶謫長沙，見鵩鳥入室而作此賦，借道家齊生死、等禍福的曠達自我寬解。「禍福相倚」化用老子而更見文采，「不繫之舟」寫盡隨緣自適的心境，是漢賦中說理抒情的名篇。",
+     bio:"賈誼（前200–前168）西漢才子，年少得志又遭讒被貶，三十三歲鬱鬱而終。〈鵩鳥賦〉作於長沙貶所，是他在困頓中以哲思自遣的心聲。",
+     reflect:"「禍兮福所倚」——眼前的壞事，未必不是日後好事的起點。你最近遇到的某件「壞事」，有沒有可能正藏著一個轉機？"},
+    {title:"刺世疾邪賦（系詩）",dynasty:"東漢",author:"趙壹",excerpt:true,
+     text:"河清不可俟，人命不可延。\n順風激靡草，富貴者稱賢。\n文籍雖滿腹，不如一囊錢。\n伊優北堂上，抗髒倚門邊。\n\n勢家多所宜，咳唾自成珠。\n被褐懷金玉，蘭蕙化為芻。\n賢者雖獨悟，所困在群愚。\n且各守爾分，勿復空馳驅。",
+     best:"文籍雖滿腹，不如一囊錢。",
+     notes:"系詩：賦末附綴的詩。俟（sì）：等待。靡草：順風倒伏的草。伊優：逢迎諂媚貌。抗髒（kàng zǎng）：剛直不屈貌。被（pī）褐：穿粗衣。芻（chú）：餵牲口的草。爾分：你的本分。〔賦末二首系詩〕",
+     trans:"黃河水清等不到，人的壽命也無法延長。草隨風倒，誰富貴誰就被稱作賢能。滿腹詩書學問，竟不如一袋錢；諂媚逢迎的人高坐廳堂，剛直不屈的人卻只能靠在門邊。／權貴之家事事順遂，連咳唾都被當成珍珠；身懷美玉者反穿粗衣埋沒，蘭草香花反被當成餵牲口的草。賢者縱然獨自清醒，卻困在滿是愚人的世道。姑且各守本分吧，不必再白白奔走鑽營。",
+     appr:"趙壹身處東漢末的污濁世道，這兩首系詩痛斥「以錢取人、以勢論賢」的黑暗，「文籍雖滿腹，不如一囊錢」尖刻如刀。憤世嫉俗、骨鯁畢露，是漢賦中極少見的批判之作。",
+     bio:"趙壹，東漢辭賦家，恃才傲物、屢忤權貴，一生坎坷。〈刺世疾邪賦〉是他向腐敗時代擲出的檄文，千載之下仍見其錚錚風骨。",
+     reflect:"「順風激靡草」——隨波逐流最省力。在一個你並不認同的風氣裡，你會選擇隨風倒，還是做那個「靠在門邊」也不肯彎腰的人？"}
+  ]},
+  tangshi:{label:"唐詩",items:[
+    {title:"登鸛雀樓",dynasty:"唐",author:"王之渙",
+     text:"白日依山盡，黃河入海流。\n欲窮千里目，更上一層樓。",
+     best:"欲窮千里目，更上一層樓。",
+     notes:"鸛雀樓：在今山西，下臨黃河。窮：窮盡、看盡。",
+     trans:"夕陽依傍著山巒漸漸沉落，黃河奔騰向海流去。想要看盡千里之外的風光，就要再登上更高的一層樓。",
+     appr:"前兩句寫景，氣象壯闊；後兩句由景入理，把登高望遠化為人生哲理，平易中見高遠，成為激勵向上的千古名句。",
+     bio:"王之渙（688–742）盛唐詩人，存詩雖僅六首，卻篇篇精警，〈登鸛雀樓〉與〈涼州詞〉皆為唐詩絕唱。",
+     reflect:"想看得更遠，就得站得更高。最近有沒有一件事，是你需要「再上一層樓」才能看清的？"},
+    {title:"春曉",dynasty:"唐",author:"孟浩然",
+     text:"春眠不覺曉，處處聞啼鳥。\n夜來風雨聲，花落知多少。",
+     best:"夜來風雨聲，花落知多少。",
+     notes:"曉：天亮。不覺曉：不知不覺天已亮。",
+     trans:"春夜睡得香甜，不知不覺天就亮了，醒來處處聽見鳥兒啼鳴。回想昨夜一陣風雨，不知吹落了多少花瓣？",
+     appr:"全詩明白如話，卻層層含蓄：由聞鳥的喜悅，轉入對夜來風雨、落花幾許的淡淡悵惘。惜春之情不著痕跡，餘味悠長，是唐人五絕的化境。",
+     bio:"孟浩然（689–740）盛唐山水田園派代表，與王維並稱「王孟」。一生多隱居，詩風清淡自然，於平淡中見深味。",
+     reflect:"「花落知多少」是一種溫柔的在意。在你忙著生活時，有沒有什麼正在悄悄「落下」，值得你回頭數一數？"},
+    {title:"靜夜思",dynasty:"唐",author:"李白",
+     text:"床前明月光，疑是地上霜。\n舉頭望明月，低頭思故鄉。",
+     best:"舉頭望明月，低頭思故鄉。",
+     notes:"疑：好像。舉頭：抬頭。（另有「床前看月光……舉頭望山月」的宋代版本，此為通行本。）",
+     trans:"床前灑落一片明亮的月光，恍惚間以為是地上結了霜。抬起頭凝望天上的明月，低下頭來，思念起遙遠的故鄉。",
+     appr:"二十字明白如話，卻把遊子望月思鄉的剎那寫得深入人心。「舉頭」「低頭」一仰一俯之間，鄉愁無聲流淌，是流傳最廣的唐詩之一。",
+     bio:"李白（701–762）字太白，號青蓮居士，盛唐最偉大的浪漫主義詩人，人稱「詩仙」。一生漫遊四方，這份漂泊，正是他鄉愁的底色。",
+     reflect:"同一輪月，照著你，也照著你想念的人或地方。今晚，你會「低頭」想起誰？"},
+    {title:"江雪",dynasty:"唐",author:"柳宗元",
+     text:"千山鳥飛絕，萬徑人蹤滅。\n孤舟蓑笠翁，獨釣寒江雪。",
+     best:"孤舟蓑笠翁，獨釣寒江雪。",
+     notes:"絕：盡、沒有了。徑：小路。蹤：腳印。蓑笠（suō lì）：草編的雨衣與斗笠。",
+     trans:"千座山峰，飛鳥的蹤影都已絕跡；萬條小路，再不見一個人的腳印。茫茫雪天，只有一葉孤舟、一個披蓑戴笠的老翁，獨自在寒冷的江面上垂釣。",
+     appr:"前兩句以「千山」「萬徑」的空寂作背景，後兩句推出孤舟獨釣的身影，於極冷極靜中見一股孤高不屈。短短二十字，宛如一幅水墨寒江圖。",
+     bio:"柳宗元（773–819）唐代文學家，「唐宋八大家」之一。因政治革新失敗被貶永州，此詩即作於貶謫之中，那獨釣的老翁，正是他孤介心境的寫照。",
+     reflect:"在所有人都離開的雪天裡，仍有人獨自守著自己的一方江面。你心裡有沒有一件事，是你願意「獨釣寒江」也要堅持的？"},
+    {title:"相思",dynasty:"唐",author:"王維",
+     text:"紅豆生南國，春來發幾枝。\n願君多採擷，此物最相思。",
+     best:"願君多採擷，此物最相思。",
+     notes:"紅豆：又名相思子，產於南方，常用以象徵相思。採擷（xié）：採摘。",
+     trans:"紅豆生長在南方，春天到了又抽出幾枝新芽。希望你多多採摘它吧——這小小的紅豆，最能寄託相思之情。",
+     appr:"全詩借物寄情，不直說想念，只勸對方「多採擷」紅豆，相思之意便含蓄而綿長。語淺情深，是王維最為人傳誦的小詩。",
+     bio:"王維（701–761）字摩詰，盛唐山水田園派大師，又精通音律、繪畫，蘇軾稱其「詩中有畫，畫中有詩」。此詩又題〈江上贈李龜年〉，多用以寄友念人。",
+     reflect:"有些想念說不出口，便寄託在一件小東西上。在你心裡，有沒有哪樣東西，一看見就會想起某個人？"},
+    {title:"登幽州臺歌",dynasty:"唐",author:"陳子昂",
+     text:"前不見古人，後不見來者。\n念天地之悠悠，獨愴然而涕下。",
+     best:"念天地之悠悠，獨愴然而涕下。",
+     notes:"幽州臺：即薊北樓，相傳燕昭王築黃金臺於此以求賢。悠悠：遼闊無盡。愴（chuàng）然：悲傷貌。涕：眼淚。",
+     trans:"向前看不見古代的賢君，向後望不見後世的明主。想到天地這樣遼闊無窮，獨自登臺，悲從中來，禁不住淚流滿面。",
+     appr:"只二十二字，卻把個人置於無窮的時空之中——前後皆空，唯餘天地悠悠。生不逢時的孤憤與宇宙般的蒼茫融為一體，氣象沉雄，是唐詩最具哲思的絕唱之一。",
+     bio:"陳子昂（661–702）唐代詩文革新的先驅，力反齊梁浮豔。他隨軍北征、屢獻奇計不被採納，登幽州臺感懷而作此歌，慷慨悲涼。",
+     reflect:"站在「天地悠悠」之間，人的煩惱會顯得很小，志向卻顯得很重。今天若把眼光放到很長的時間尺度，什麼事還值得你認真去做？"},
+    {title:"回鄉偶書",dynasty:"唐",author:"賀知章",
+     text:"少小離家老大回，鄉音無改鬢毛衰。\n兒童相見不相識，笑問客從何處來。",
+     best:"兒童相見不相識，笑問客從何處來。",
+     notes:"老大：年老。鬢毛衰（cuī）：兩鬢頭髮稀疏花白；衰此處讀 cuī 以協韻。",
+     trans:"年少時離開家鄉，年老才回來；鄉音雖沒改變，兩鬢卻已斑白稀疏。家鄉的孩子見了我都不認得，笑著問：「這位客人是從哪裡來的呀？」",
+     appr:"久客返鄉的百感，全凝在孩童一句天真的「客從何處來」裡——我本是歸人，在故鄉卻成了「客」。不著悲字而悵惘自生，平淡中見深情，是唐人絕句的妙品。",
+     bio:"賀知章（659–744）盛唐詩人，性曠達，自號「四明狂客」。八十多歲辭官返鄉，〈回鄉偶書〉即作於此時，是他一生漂泊後的還鄉之歌。",
+     reflect:"離開久了，故鄉也會把你當成「客」。對你而言，如今哪裡才是真正「回得去」的家？"}
+  ]},
+  songci:{label:"宋詞",items:[
+    {title:"水調歌頭·明月幾時有",dynasty:"宋",author:"蘇軾",
+     text:"明月幾時有？把酒問青天。\n不知天上宮闕，今夕是何年。\n我欲乘風歸去，又恐瓊樓玉宇，高處不勝寒。\n起舞弄清影，何似在人間。\n\n轉朱閣，低綺戶，照無眠。\n不應有恨，何事長向別時圓？\n人有悲歡離合，月有陰晴圓缺，此事古難全。\n但願人長久，千里共嬋娟。",
+     best:"但願人長久，千里共嬋娟。",
+     notes:"把酒：端起酒杯。瓊樓玉宇：月中仙宮。嬋娟：指明月。原序云作於丙辰中秋，兼懷其弟子由。",
+     trans:"明月是從什麼時候開始有的？我端起酒杯問青天。不知天上的宮殿，今夜又是哪一年。我想乘風回到天上，又怕那美玉砌成的樓宇太高，受不住寒冷。在月下起舞、玩賞清朗的身影，哪裡比得上人間呢？／月光轉過朱紅樓閣，低低照進雕花窗戶，照著無眠的我。月亮不該對人有恨，為何總在人離別時才圓？人有悲歡離合，月有陰晴圓缺，這樣的事自古難以兩全。只願彼此都能長久平安，縱使相隔千里，也共賞這一輪明月。",
+     appr:"由問月、欲仙，到回轉人間、體悟「此事古難全」，最後以「但願人長久，千里共嬋娟」作結，把中秋的思念昇華為對天下離人的祝福。豪放中含曠達，是詠月詞的千古絕唱。",
+     bio:"蘇軾（1037–1101）號東坡，宋代文壇全才，詩、詞、文、書、畫俱絕。此詞作於密州中秋，時與弟蘇轍多年未見，借月抒懷，遂成名篇。",
+     reflect:"「人有悲歡離合，月有陰晴圓缺」——殘缺本是常態。你能不能也對生活裡某個「不圓滿」，說一句「此事古難全」，然後放過它？"},
+    {title:"如夢令·昨夜雨疏風驟",dynasty:"宋",author:"李清照",
+     text:"昨夜雨疏風驟，濃睡不消殘酒。\n試問捲簾人，卻道海棠依舊。\n知否，知否？應是綠肥紅瘦。",
+     best:"知否，知否？應是綠肥紅瘦。",
+     notes:"雨疏風驟：雨點稀疏、風勢急猛。捲簾人：侍女。綠肥紅瘦：綠葉茂盛、紅花凋零。",
+     trans:"昨夜雨稀風急，我沉沉睡去，醒來酒意仍未全消。試著問捲簾的侍女，她卻說海棠還和原來一樣。你可知道，你可知道？經了一夜風雨，應該是綠葉更繁、紅花更稀了啊。",
+     appr:"短短六句，以一問一答的口語寫成。詞人惜花、侍女粗心，「綠肥紅瘦」四字尤為精妙，把傷春惜花的細膩心思寫得新鮮靈動，是婉約詞的典範。",
+     bio:"李清照（1084–約1155）號易安居士，宋代最傑出的女詞人。前期詞清麗婉約，後期歷國破家亡轉為沉鬱。此為其早年名作。",
+     reflect:"同一夜風雨，有人說「依舊」，有人看見「綠肥紅瘦」。今天有什麼別人沒注意、你卻看見了的小變化？"},
+    {title:"虞美人·春花秋月何時了",dynasty:"南唐",author:"李煜",
+     text:"春花秋月何時了，往事知多少。\n小樓昨夜又東風，故國不堪回首月明中。\n雕欄玉砌應猶在，只是朱顏改。\n問君能有幾多愁？恰似一江春水向東流。",
+     best:"問君能有幾多愁？恰似一江春水向東流。",
+     notes:"了：終了。砌（qì）：台階。朱顏改：容顏與人事已非。幾多：多少。",
+     trans:"春花秋月年年依舊，這樣的日子何時才是個盡頭？多少往事還湧上心頭。昨夜小樓又吹來春風，在明亮的月光下，故國舊事實在不堪回首。那雕花的欄杆、玉砌的台階應該都還在，只是當年的容顏已改。要問我心中能有多少愁？恰似那一江春水，滔滔不盡地向東奔流。",
+     appr:"由眼前春花秋月，逼出亡國之君的無盡哀愁，最後以「一江春水向東流」狀愁之多、之長、之不可遏止，化抽象為具象，成為寫愁的千古絕唱。相傳此詞作成不久，李煜即被賜死。",
+     bio:"李煜（937–978）南唐後主，亡國後被囚於宋。他不是稱職的君王，卻是絕代的詞人——國破家亡的血淚，把他的詞推上「變伶工之詞為士大夫之詞」的高峰。",
+     reflect:"「往事知多少」——有些回憶美得讓人不忍回首。你心裡有沒有一段「不堪回首」、卻又忘不掉的往事？"},
+    {title:"青玉案·元夕",dynasty:"宋",author:"辛棄疾",
+     text:"東風夜放花千樹，更吹落、星如雨。\n寶馬雕車香滿路。鳳簫聲動，玉壺光轉，一夜魚龍舞。\n蛾兒雪柳黃金縷，笑語盈盈暗香去。\n眾裡尋他千百度，驀然回首，那人卻在，燈火闌珊處。",
+     best:"眾裡尋他千百度，驀然回首，那人卻在，燈火闌珊處。",
+     notes:"元夕：元宵節。花千樹：形容燈火如千樹開花。玉壺：指明月（一說燈）。魚龍舞：舞動魚龍形的花燈。蛾兒、雪柳、黃金縷：婦女元宵的頭飾。闌珊：稀疏、將盡。",
+     trans:"元宵夜，東風像吹開了千樹繁花的燈火，焰火紛紛落下如星雨。華貴的車馬來往，香氣灑滿長街。簫聲悠揚，明月流轉，魚龍花燈舞動了整夜。盛裝的女子戴著精緻頭飾，說笑著走過，留下淡淡幽香。我在人群中千百次地尋找她，驀然回頭，那人卻獨自站在燈火稀落的暗處。",
+     appr:"極寫元宵的繁華熱鬧，全為烘托結尾那個甘於寂寞、自守一隅的「那人」。王國維借「驀然回首」一句喻治學的最高境界，使此詞超越愛情，成為境界的象徵。",
+     bio:"辛棄疾（1140–1207）號稼軒，南宋豪放派詞宗，一生力主抗金而不得志。即便寫元宵，他筆下那個遠離喧鬧的身影，也透著不肯隨波逐流的孤高。",
+     reflect:"最熱鬧的地方未必有你要找的。你生命中那個「燈火闌珊處」的人或答案，是不是也常在你回頭時才看見？"},
+    {title:"相見歡·無言獨上西樓",dynasty:"南唐",author:"李煜",
+     text:"無言獨上西樓，月如鉤。\n寂寞梧桐深院鎖清秋。\n剪不斷，理還亂，是離愁。\n別是一般滋味在心頭。",
+     best:"剪不斷，理還亂，是離愁。",
+     notes:"鉤：如鉤的彎月。鎖清秋：清冷的秋色彷彿被鎖在深院中。別是一般：另是一種。",
+     trans:"默默無語，獨自登上西樓，抬頭只見一彎如鉤的月。寂寞的梧桐立在深深庭院，清冷的秋意彷彿都被鎖在這裡。那離別的愁緒，剪也剪不斷，越理卻越亂；它說不出是什麼，只是另有一種滋味，悄悄壓在心頭。",
+     appr:"上片寫景，孤月、梧桐、深院層層鋪出寂寥；下片以「剪不斷，理還亂」六字，把無形的離愁寫得可觸可感。亡國之痛盡在不言中，含蓄而深沉。",
+     bio:"李煜（937–978）南唐後主。被囚汴京後，他的詞洗盡早年的綺麗，轉為沉痛真摯。這份「剪不斷」的愁，正是一個失去一切之人的心聲。",
+     reflect:"有些心情「剪不斷，理還亂」，連自己都說不清。今天的你，心頭是否也壓著一種「別是一般滋味」的情緒？試著寫下來，也許就理清了。"},
+    {title:"念奴嬌·赤壁懷古",dynasty:"宋",author:"蘇軾",
+     text:"大江東去，浪淘盡，千古風流人物。\n故壘西邊，人道是、三國周郎赤壁。\n亂石穿空，驚濤拍岸，捲起千堆雪。\n江山如畫，一時多少豪傑。\n\n遙想公瑾當年，小喬初嫁了，雄姿英發。\n羽扇綸巾，談笑間、檣櫓灰飛煙滅。\n故國神遊，多情應笑我，早生華髮。\n人生如夢，一尊還酹江月。",
+     best:"大江東去，浪淘盡，千古風流人物。",
+     notes:"周郎：周瑜。小喬：周瑜之妻。綸（guān）巾：青絲頭巾。檣櫓：船桅與槳，借指曹軍戰船。酹（lèi）：以酒灑地祭奠。",
+     trans:"大江滾滾東流，淘盡了千古多少風流人物。舊營壘的西邊，人們說那就是三國周瑜大破曹軍的赤壁。亂石高聳插天，驚濤猛拍江岸，捲起千堆雪白的浪花。江山如畫，那一時湧現多少豪傑！／遙想當年周瑜，小喬剛嫁給他，正英姿煥發。他手搖羽扇、頭戴綸巾，談笑之間，曹操的戰船便灰飛煙滅。我神遊這故國戰場，該笑自己太多情，早早生了白髮。人生如夢一場，且把這杯酒灑向江中的明月吧。",
+     appr:"豪放詞的開山絕唱。上片寫赤壁雄奇江山，下片懷周瑜少年功業，再轉回自身的華髮之歎，於曠達中見蒼涼。「大江東去」一句出，詞境從此為之一闊。",
+     bio:"蘇軾（1037–1101）貶謫黃州時遊赤壁而作。事業受挫、年近半百，他卻以「人生如夢」的超脫消解失意，正是東坡曠達胸襟的寫照。",
+     reflect:"周瑜三十多歲就建立不世功業，蘇軾卻說「人生如夢」。在「比較」與「釋然」之間，你今天更需要哪一種心情？"},
+    {title:"浣溪沙·一曲新詞酒一杯",dynasty:"宋",author:"晏殊",
+     text:"一曲新詞酒一杯，去年天氣舊亭臺。\n夕陽西下幾時回？\n無可奈何花落去，似曾相識燕歸來。\n小園香徑獨徘徊。",
+     best:"無可奈何花落去，似曾相識燕歸來。",
+     notes:"浣溪沙：詞牌名。香徑：落花飄香的小路。徘徊：來回走動。",
+     trans:"填一曲新詞、飲一杯酒，還是去年的天氣、舊日的亭臺。夕陽西沉，何時才能再回來？花兒謝去，無可奈何；燕子歸來，似曾相識。我獨自在落花飄香的小園小徑上來回踱步。",
+     appr:"於閒雅中藏哲思。「無可奈何花落去，似曾相識燕歸來」一聯，把時光流逝的惆悵與循環往復的欣慰熔於一爐，對仗天成、含蘊無窮，是宋詞中傳誦千古的名句。",
+     bio:"晏殊（991–1055）北宋名相兼詞人，詞風雍容圓融。他身居高位、生活優裕，筆下卻常見對時光易逝的細膩感懷。",
+     reflect:"「花落去」與「燕歸來」總是並肩而行——有失去，也有重來。今天的你，正在送走什麼，又有什麼正悄悄歸來？"}
+  ]},
+  yuanqu:{label:"元曲",items:[
+    {title:"天淨沙·秋思",dynasty:"元",author:"馬致遠",
+     text:"枯藤老樹昏鴉，\n小橋流水人家，\n古道西風瘦馬。\n夕陽西下，\n斷腸人在天涯。",
+     best:"夕陽西下，斷腸人在天涯。",
+     notes:"天淨沙：曲牌名。昏鴉：黃昏歸巢的烏鴉。斷腸人：極度悲傷的人，此指漂泊遊子。",
+     trans:"枯萎的藤、蒼老的樹、黃昏歸巢的烏鴉；小橋下流水潺潺、橋邊有幾戶人家；古老的道路上，西風蕭瑟，一匹瘦馬獨行。夕陽正向西沉落，肝腸寸斷的遊子，仍漂泊在天涯。",
+     appr:"前三句純用名詞並列，九種景物疊成一幅蕭瑟秋郊圖，不著一個「愁」字；末句點睛，孤旅之悲噴湧而出。被譽為「秋思之祖」。",
+     bio:"馬致遠（約1250–1321）元曲四大家之一，號東籬。此曲僅二十八字，意境蒼涼深遠，是元代散曲小令的巔峰之作。",
+     reflect:"九個冷清的景物，最後落在「天涯」二字。你心裡有沒有一個「家」的方向？離它是近了，還是遠了？"},
+    {title:"山坡羊·潼關懷古",dynasty:"元",author:"張養浩",
+     text:"峰巒如聚，波濤如怒，山河表裡潼關路。\n望西都，意躊躇。\n傷心秦漢經行處，宮闕萬間都做了土。\n興，百姓苦；亡，百姓苦。",
+     best:"興，百姓苦；亡，百姓苦。",
+     notes:"山坡羊：曲牌名。山河表裡：潼關外有黃河、內有華山，形勢險要。西都：指長安。躊躇：感慨沉思。",
+     trans:"群峰像在此聚攏，波濤像在發怒，潼關之路內外都是險固山河。遙望長安舊都，心緒沉重難平。令人傷心的是，這秦漢一路行經之地，當年萬間宮殿如今都化作塵土。王朝興起，百姓受苦；王朝滅亡，百姓還是受苦。",
+     appr:"借憑弔潼關、追想秦漢興亡，最後逼出「興，百姓苦；亡，百姓苦」的沉痛之論，道破歷史治亂中百姓始終是受難者。氣魄沉雄，是散曲懷古的傑作。",
+     bio:"張養浩（1270–1329）元代名臣。關中大旱時他奉命賑災，途經潼關有感而作此曲，不久即積勞病逝任上，憂民之心可見一斑。",
+     reflect:"「興，百姓苦；亡，百姓苦」——他關心的始終是最普通的人。在你關注的大事裡，有沒有把目光放回到「具體的人」身上？"},
+    {title:"天淨沙·秋",dynasty:"元",author:"白樸",
+     text:"孤村落日殘霞，\n輕煙老樹寒鴉，\n一點飛鴻影下。\n青山綠水，\n白草紅葉黃花。",
+     best:"青山綠水，白草紅葉黃花。",
+     notes:"殘霞：晚霞。寒鴉：寒天的烏鴉。飛鴻：飛行的大雁。影下：身影掠下。",
+     trans:"孤零零的村落籠在落日殘霞中，淡淡輕煙、蒼老樹木、棲息的寒鴉；一隻孤雁的身影從天邊掠下。再放眼望去——青的山、綠的水、白的草、紅的葉、黃的花。",
+     appr:"與馬致遠〈秋思〉同調而異趣：前半同樣以蕭瑟景物鋪排，後半卻以「青山綠水、白草紅葉黃花」六種明麗色彩翻轉，於蕭瑟中見生機，宛如一幅秋日設色山水。",
+     bio:"白樸（1226–約1306）元曲四大家之一，與關漢卿、馬致遠、鄭光祖齊名。歷經金亡之痛，終身不仕，寄情詞曲，筆下別有一份清逸。",
+     reflect:"同樣的秋天，馬致遠看見「斷腸」，白樸看見「紅葉黃花」。你今天看出去的世界，是偏冷色，還是暖色？"},
+    {title:"四塊玉·別情",dynasty:"元",author:"關漢卿",
+     text:"自送別，心難捨，一點相思幾時絕？\n憑闌袖拂楊花雪。\n溪又斜，山又遮，人去也！",
+     best:"溪又斜，山又遮，人去也！",
+     notes:"四塊玉：曲牌名。捨：放下。絕：斷。憑闌：靠著欄杆。楊花雪：像雪一樣紛飛的柳絮。",
+     trans:"自從送你離別，心裡總是難捨難分，這一點相思，何時才能斷絕？我靠著欄杆，用衣袖拂去如雪的柳絮，好望得遠些。可是溪水又斜斜流去，山巒又重重遮擋——人，終究是走遠了！",
+     appr:"以女子口吻寫送別後的相思。前三句直訴衷情，後以「溪又斜，山又遮，人去也」層層遞進，景中含情，把目送遠去、終至不見的悵惘寫得一波三折，是元散曲言情的雋品。",
+     bio:"關漢卿（約1234前–約1300）元曲四大家之首，雜劇〈竇娥冤〉的作者，自稱「銅豌豆」。他的散曲既能潑辣豪放，也能如此婉轉細膩。",
+     reflect:"「溪又斜，山又遮」——阻隔總是一重接一重。你心裡有沒有一個人，隔著「溪」與「山」，卻仍想再見一面？"}
+  ]},
+  shijing:{label:"詩經",items:[
+    {title:"關雎",dynasty:"先秦",author:"《詩經·周南》",
+     text:"關關雎鳩，在河之洲。\n窈窕淑女，君子好逑。\n參差荇菜，左右流之。\n窈窕淑女，寤寐求之。\n求之不得，寤寐思服。\n悠哉悠哉，輾轉反側。\n參差荇菜，左右采之。\n窈窕淑女，琴瑟友之。\n參差荇菜，左右芼之。\n窈窕淑女，鐘鼓樂之。",
+     best:"窈窕淑女，君子好逑。",
+     notes:"關關：鳥和鳴聲。雎鳩：一種水鳥。窈窕：嫻靜美好。逑：配偶。荇菜：水生植物。寤寐：醒與睡，指時時。芼（mào）：擇取。",
+     trans:"雎鳩關關對鳴，棲在河中沙洲上。嫻靜美好的女子，正是君子的好配偶。長短不齊的荇菜，順著水流左右採摘；那美好的女子啊，我日夜都在追求。追求卻得不到，日夜思念，思念悠悠不盡，翻來覆去難以成眠。終得相親，便以琴瑟與她相親，以鐘鼓使她歡樂。",
+     appr:"以雎鳩起興，寫君子對淑女的思慕，由「求之不得」的輾轉，到「琴瑟」「鐘鼓」的願景，情感真摯而有節制。孔子評為「樂而不淫，哀而不傷」，列為《詩經》之首。",
+     bio:"《詩經》是中國最早的詩歌總集，收西周至春秋詩三百零五篇，分風、雅、頌。〈關雎〉屬「國風·周南」，為全書開篇，奠定中國抒情詩的傳統。",
+     reflect:"「求之不得，寤寐思服」把得不到的牽掛寫得坦率而美。你最近有沒有一件「求之不得」的事？它讓你輾轉，也讓你更清楚自己要什麼。"},
+    {title:"蒹葭（首章）",dynasty:"先秦",author:"《詩經·秦風》",excerpt:true,
+     text:"蒹葭蒼蒼，白露為霜。\n所謂伊人，在水一方。\n溯洄從之，道阻且長。\n溯游從之，宛在水中央。",
+     best:"所謂伊人，在水一方。",
+     notes:"蒹葭（jiān jiā）：蘆葦。蒼蒼：茂盛灰白貌。伊人：那人。溯洄：逆流而上。溯游：順流而下。宛：彷彿。〔全詩三章，此錄首章〕",
+     trans:"蘆葦茂密蒼蒼，清晨白露凝成了霜。我所思念的那個人，就在河水的另一方。逆流而上去追尋，道路艱險又漫長；順流而下去追尋，她彷彿就在水的中央。",
+     appr:"以秋水蒼茫、白露成霜起興，「伊人」可望而不可即，「宛在水中央」更添朦朧悵惘。意境空靈，把「追尋而難得」的永恆情境寫到極致，是《詩經》中最具朦朧美的篇章。",
+     bio:"〈蒹葭〉出自《詩經·秦風》。「伊人」究竟是愛人、賢者或理想，歷來眾說紛紜，正因其留白，才成就了千古不衰的想像空間。",
+     reflect:"「所謂伊人，在水一方」——有些追尋，重要的或許不是抵達，而是追尋本身。你心中可有一個「在水一方」的人或理想？"},
+    {title:"桃夭",dynasty:"先秦",author:"《詩經·周南》",
+     text:"桃之夭夭，灼灼其華。\n之子于歸，宜其室家。\n桃之夭夭，有蕡其實。\n之子于歸，宜其家室。\n桃之夭夭，其葉蓁蓁。\n之子于歸，宜其家人。",
+     best:"桃之夭夭，灼灼其華。",
+     notes:"夭夭：少壯茂盛貌。灼灼：花開鮮明貌。華：同「花」。之子：這位姑娘。于歸：出嫁。蕡（fén）：果實纍纍。蓁蓁（zhēn）：枝葉茂密。宜：使……和順。",
+     trans:"桃樹長得茂盛，花開得這樣鮮豔。這位姑娘要出嫁了，必能使夫家和順美滿。桃樹茂盛，結出纍纍果實；姑娘出嫁，必能使家室興旺。桃樹茂盛，枝葉繁密；姑娘出嫁，必能使一家和睦。",
+     appr:"以桃花起興，由花到果到葉，層層祝願新嫁娘為夫家帶來和美。比喻新鮮、節奏明快，洋溢著對新婚的真摯祝福，是《詩經》中最歡欣的婚嫁之歌。",
+     bio:"〈桃夭〉出自《詩經·周南》。先民以最尋常的桃樹入詩，把對婚姻與家庭的美好期許寫得自然天成，兩千多年後讀來仍喜氣盈盈。",
+     reflect:"「灼灼其華」是生命最盛的模樣。今天的你，哪一部分正「灼灼」地綻放？又願把怎樣的祝福，送給身邊正要啟程的人？"},
+    {title:"采薇（節選）",dynasty:"先秦",author:"《詩經·小雅》",excerpt:true,
+     text:"昔我往矣，楊柳依依。\n今我來思，雨雪霏霏。\n行道遲遲，載渴載飢。\n我心傷悲，莫知我哀。",
+     best:"昔我往矣，楊柳依依。今我來思，雨雪霏霏。",
+     notes:"昔：從前。往：指出征離家。依依：柳枝柔軟隨風貌。思：句末語氣詞。霏霏：雪盛貌。遲遲：緩慢。載……載……：又……又……。〔此錄末章〕",
+     trans:"想當年我出征離家時，楊柳正依依輕拂；如今我終於歸來，卻是大雪紛紛。一路緩緩而行，又渴又餓。我心中無限傷悲，可有誰能明白我的哀愁？",
+     appr:"以「楊柳依依」的春日離別，對照「雨雪霏霏」的寒冬歸來，一去一回、一春一冬，把征人歷盡艱辛的滄桑與孤獨寫到極致，被譽為《詩經》情景交融的千古名句。",
+     bio:"〈采薇〉出自《詩經·小雅》，寫戍邊將士的征戰之苦與思歸之情。這末章四句以景寫情、不著一個「苦」字而苦自見，後世評為「詩三百」中最動人的篇章之一。",
+     reflect:"「昔我往矣」與「今我來思」之間，隔著一整段人生的風雪。回看自己「出發」與「此刻」之間，最大的改變是什麼？"},
+    {title:"子衿",dynasty:"先秦",author:"《詩經·鄭風》",
+     text:"青青子衿，悠悠我心。\n縱我不往，子寧不嗣音？\n青青子佩，悠悠我思。\n縱我不往，子寧不來？\n挑兮達兮，在城闕兮。\n一日不見，如三月兮。",
+     best:"一日不見，如三月兮。",
+     notes:"子衿：你的衣領。衿（jīn）：衣領。悠悠：綿長不斷。寧：難道。嗣音：傳遞音訊。佩：佩玉的帶子。挑（tāo）兮達（tà）兮：獨自往來徘徊貌。城闕：城門兩邊的樓台。",
+     trans:"你那青青的衣領，牽動我綿綿的心。縱然我沒有去找你，你難道就不能捎個音訊？你那青青的佩帶，繫著我悠悠的思念。縱然我沒有去找你，你難道就不能主動來？我獨自在城樓上來回徘徊。才一天不見你，就像隔了三個月那樣長啊。",
+     appr:"以「青青子衿」「青青子佩」反覆詠歎，寫盡等待中那份又嗔又盼的心情；末句「一日不見，如三月兮」誇張而真切，把思念的煎熬寫得靈動可愛，是先秦情詩的名篇。",
+     bio:"〈子衿〉出自《詩經·鄭風》。曹操〈短歌行〉「青青子衿，悠悠我心」即化用此句，借以表達對賢才的渴慕，可見其流傳之深遠。",
+     reflect:"「一日不見，如三月兮」——想念會把時間拉長。最近有沒有誰，讓你覺得等待的每一天都格外漫長？"},
+    {title:"擊鼓（節選）",dynasty:"先秦",author:"《詩經·邶風》",excerpt:true,
+     text:"死生契闊，與子成說。\n執子之手，與子偕老。\n于嗟闊兮，不我活兮。\n于嗟洵兮，不我信兮。",
+     best:"執子之手，與子偕老。",
+     notes:"契闊：聚散、生死相約。成說（shuō）：立下誓言。偕（xié）老：一同到老。于嗟（xū jiē）：嘆詞。闊：分離。洵（xún）：遠。不我信：不能實現我的誓言。〔節選後二章〕",
+     trans:"無論生死離合，我曾與你立下誓言：牽著你的手，和你一同到老。可嘆如今相隔這樣遠，教我難以活下去；可嘆別離這樣久遠，竟無法實現當初的誓言。",
+     appr:"原是征夫在戰場上的悲歌。「執子之手，與子偕老」本是同袍共生死的誓言，後世卻化為最動人的愛情盟誓。誓言之美與「不我活」的絕望相映，愈見其沉痛。",
+     bio:"〈擊鼓〉出自《詩經·邶風》，寫久戍不歸的士兵思鄉念人之苦。這幾句因情真意切，成為跨越三千年仍被傳誦的盟誓之詞。",
+     reflect:"「執子之手，與子偕老」是一個關於「一直在」的承諾。在你生命裡，有誰是你願意這樣承諾、或曾這樣承諾你的人？"},
+    {title:"木瓜",dynasty:"先秦",author:"《詩經·衛風》",
+     text:"投我以木瓜，報之以瓊琚。\n匪報也，永以為好也！\n投我以木桃，報之以瓊瑤。\n匪報也，永以為好也！\n投我以木李，報之以瓊玖。\n匪報也，永以為好也！",
+     best:"投我以木瓜，報之以瓊琚。",
+     notes:"瓊琚、瓊瑤、瓊玖：都是美玉。匪：同「非」。好（hǎo）：友好、情誼。",
+     trans:"你送我一顆木瓜，我回贈你一塊美玉。這哪裡是回報啊，是要與你永遠交好！你送我木桃，我回贈瓊瑤；你送我木李，我回贈瓊玖——都不是為了償還，而是願與你的情誼長長久久。",
+     appr:"以「投木瓜、報瓊琚」的不對等回贈，道出真情的真諦：所重不在禮物輕重，而在「永以為好」的心意。複沓詠歎、情味淳厚，「投桃報李」之典即源於此。",
+     bio:"〈木瓜〉出自《詩經·衛風》，是先民贈答傳情之作。它把人際往來最美的姿態寫得明白：以微物寄深情，以厚報答薄施。",
+     reflect:"「匪報也，永以為好也」——回禮不是為了還清，而是為了延續情誼。最近有沒有誰待你的好，你想用心「永以為好」地回應？"}
+  ]},
+  guwen:{label:"古文觀止",items:[
+    {title:"陋室銘",dynasty:"唐",author:"劉禹錫",
+     text:"山不在高，有仙則名。水不在深，有龍則靈。\n斯是陋室，惟吾德馨。\n苔痕上階綠，草色入簾青。\n談笑有鴻儒，往來無白丁。\n可以調素琴，閱金經。\n無絲竹之亂耳，無案牘之勞形。\n南陽諸葛廬，西蜀子雲亭。\n孔子云：何陋之有？",
+     best:"斯是陋室，惟吾德馨。",
+     notes:"銘：刻於器物以自警的文體。德馨：品德高潔遠播。鴻儒：博學之士。白丁：無學問的人。絲竹：音樂。案牘：公文。",
+     trans:"山不在於高，有神仙就出名；水不在於深，有蛟龍就顯靈。這雖是簡陋的居室，只因我品德高潔而不覺其陋。苔痕碧綠爬上台階，草色青青映入簾內。談笑往來的都是博學之士，沒有淺薄之人。可以彈奏素琴、閱讀佛經，沒有嘈雜音樂擾亂耳朵，也沒有公文勞累身心。就像南陽諸葛亮的草廬、西蜀揚子雲的亭子一樣。孔子說：有什麼簡陋的呢？",
+     appr:"全篇八十一字，以山水起興，借陋室自述志節：居室雖陋，唯德是馨。對仗工整、音韻鏗鏘，於清貧中見高潔自守的風骨，是古代銘文的典範。",
+     bio:"劉禹錫（772–842）唐代詩人，性格剛直，屢遭貶謫仍不改其志。相傳此銘作於被貶和州、居室一再被縮小之時，是他不向境遇低頭的宣言。",
+     reflect:"「斯是陋室，惟吾德馨」——讓一個空間有價值的，是住在裡面的人。你最常待的那個空間，因為「你」而有了什麼樣的氣質？"},
+    {title:"愛蓮說",dynasty:"宋",author:"周敦頤",
+     text:"水陸草木之花，可愛者甚蕃。\n晉陶淵明獨愛菊；自李唐來，世人甚愛牡丹；\n予獨愛蓮之出淤泥而不染，濯清漣而不妖，\n中通外直，不蔓不枝，香遠益清，亭亭淨植，\n可遠觀而不可褻玩焉。\n予謂菊，花之隱逸者也；牡丹，花之富貴者也；蓮，花之君子者也。",
+     best:"出淤泥而不染，濯清漣而不妖。",
+     notes:"蕃：多。濯：洗。清漣：清水。妖：妖媚。亭亭淨植：潔淨地直立。褻玩：輕慢地玩弄。",
+     trans:"水上陸上各種花草，值得喜愛的很多。晉代陶淵明只愛菊；自唐以來，世人很愛牡丹；我卻獨愛蓮——它從污泥中長出卻不被沾染，在清水中洗滌卻不顯妖媚，內裡通透、外形挺直，不牽蔓、不旁枝，香氣越遠越清幽，潔淨地亭亭直立，只可遠遠觀賞，而不可輕慢玩弄。我認為：菊，是花中的隱士；牡丹，是花中的富貴者；蓮，則是花中的君子。",
+     appr:"借三種花喻三種人格，獨尊蓮為「君子」，「出淤泥而不染」一句更成為高潔人格的千古象徵。托物言志、層次分明，是宋代說理小品的名篇。",
+     bio:"周敦頤（1017–1073）北宋理學開山祖師，著有〈太極圖說〉。〈愛蓮說〉藉蓮自況，寄寓他在濁世中持守清正的人生理想。",
+     reflect:"「出淤泥而不染」說來容易，做來極難。在你所處的環境裡，有沒有一樣你想守住、不願被同化的東西？"},
+    {title:"誡子書",dynasty:"三國·蜀",author:"諸葛亮",
+     text:"夫君子之行，靜以修身，儉以養德。\n非淡泊無以明志，非寧靜無以致遠。\n夫學須靜也，才須學也，\n非學無以廣才，非志無以成學。\n淫慢則不能勵精，險躁則不能治性。\n年與時馳，意與日去，\n遂成枯落，多不接世，\n悲守窮廬，將復何及！",
+     best:"非淡泊無以明志，非寧靜無以致遠。",
+     notes:"夫（fú）：句首發語詞。淡泊：不慕名利。明志：使志向明確。致遠：達到遠大目標。淫慢：放縱怠惰。險躁：浮躁。勵精：振奮精神。年與時馳：年華隨光陰飛逝。窮廬：破舊的屋舍。",
+     trans:"君子的品行，靠寧靜來修養身心，靠節儉來培養品德。不看淡名利就無法明確志向，不寧靜專一就無法達到遠大。學習必須寧靜，才幹必須靠學習——不學習就無法增廣才幹，沒有志向就無法成就學業。放縱怠惰就不能振奮精神，浮躁冒進就不能陶冶性情。年華隨光陰飛馳，意志隨歲月消逝，最終像枯葉般凋零，多半無益於世，到時只能悲守破屋，又怎麼來得及！",
+     appr:"諸葛亮臨終前寫給幼子的家書，僅八十六字，卻把修身、立志、為學的道理講得透徹懇切。「淡泊明志，寧靜致遠」更成為千古傳誦的人生格言。字字是慈父的叮嚀，也是智者的總結。",
+     bio:"諸葛亮（181–234）字孔明，三國蜀漢丞相，鞠躬盡瘁的賢相典範。此書作於他生命的最後一年，是寫給八歲兒子諸葛瞻的家訓，殷殷之情，力透紙背。",
+     reflect:"「淡泊明志，寧靜致遠」——靜得下來，才走得遠。你最近是否太忙太躁？今天能不能給自己留一段「寧靜」的時間？"},
+    {title:"岳陽樓記（節選）",dynasty:"宋",author:"范仲淹",excerpt:true,
+     text:"嗟夫！予嘗求古仁人之心，或異二者之為，何哉？\n不以物喜，不以己悲；\n居廟堂之高則憂其民，處江湖之遠則憂其君。\n是進亦憂，退亦憂。\n然則何時而樂耶？\n其必曰：先天下之憂而憂，後天下之樂而樂歟！\n噫！微斯人，吾誰與歸？",
+     best:"先天下之憂而憂，後天下之樂而樂。",
+     notes:"嗟夫（jiē fú）：感歎詞。古仁人：古代有仁德的人。廟堂：朝廷。江湖：指退隱之處。微：如果沒有。誰與歸：與誰同道。〔節選末段〕",
+     trans:"唉！我曾探求古代仁人的心，他們或許不同於上述兩種人，為什麼呢？他們不因外物好壞而喜、不因自己得失而悲；在朝廷做高官，就為百姓憂慮，退處江湖之遠，就為君主憂慮——進也憂、退也憂。那麼他們什麼時候才快樂呢？他們必定會說：在天下人憂慮之前先憂慮，在天下人快樂之後才快樂吧！唉！如果沒有這樣的人，我又能與誰同道呢？",
+     appr:"范仲淹應友之請而記岳陽樓，卻不寫樓而寫胸襟。「先天下之憂而憂，後天下之樂而樂」把個人悲喜提升為以天下為己任的士人精神，成為千古傳誦的人格標竿。",
+     bio:"范仲淹（989–1052）北宋名臣，文武兼資、力行改革。此文作於被貶之際，借樓抒志，正是他「寧鳴而死，不默而生」一生的注腳。",
+     reflect:"「不以物喜，不以己悲」是極高的修養。今天若有件事讓你大喜或大悲，試著問自己：它真的值得我的心情被它完全牽動嗎？"},
+    {title:"醉翁亭記（節選）",dynasty:"宋",author:"歐陽脩",excerpt:true,
+     text:"環滁皆山也。\n其西南諸峰，林壑尤美，望之蔚然而深秀者，琅琊也。\n山行六七里，漸聞水聲潺潺、瀉出於兩峰之間者，釀泉也。\n峰回路轉，有亭翼然臨於泉上者，醉翁亭也。\n太守與客來飲於此，飲少輒醉，而年又最高，故自號曰醉翁也。\n醉翁之意不在酒，在乎山水之間也。",
+     best:"醉翁之意不在酒，在乎山水之間也。",
+     notes:"環滁（chú）：環繞滁州。蔚然：草木茂盛。琅琊（láng yá）：山名。潺潺：水流聲。翼然：像鳥張翼。輒（zhé）：就。〔節選首段〕",
+     trans:"環繞滁州的都是山。它西南方的群峰，樹林與山谷格外秀美，望去草木蔥蘢、幽深秀麗的，是琅琊山。沿山走六七里，漸漸聽見潺潺水聲，從兩峰之間瀉出的，是釀泉。峰迴路轉，有座亭子像鳥兒張翼般臨於泉上，就是醉翁亭。太守和賓客來這裡飲酒，喝一點就醉，加上年紀最大，所以自號「醉翁」。醉翁的心意不在酒，而在這山水之間啊。",
+     appr:"通篇以「也」字收束、如行雲流水。由滁州群山層層推近到醉翁亭，再以「醉翁之意不在酒」點出與民同樂的襟懷。寫景、敘事、抒情渾然一體，是古代遊記的典範。",
+     bio:"歐陽脩（1007–1072）北宋文壇領袖，「唐宋八大家」之一。被貶滁州時，他寄情山水、與民同樂，遂成此千古名篇。",
+     reflect:"「醉翁之意不在酒」——真正讓你著迷的，往往不是那件事本身。你最近熱衷的某件事，背後真正吸引你的「山水」是什麼？"}
+  ]}
+};
+const WEEKDAY_MAP={0:"guwen",1:"yuefu",2:"hanfu",3:"tangshi",4:"songci",5:"yuanqu",6:"shijing"};
+const WD_CH=["週日","週一","週二","週三","週四","週五","週六"];
+const EPOCH=new Date(2020,0,6); const DAY=86400000;
+
+/* ---------- 工具 ---------- */
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,"0");
+const startOfDay=d=>new Date(d.getFullYear(),d.getMonth(),d.getDate());
+const keyOf=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parseKey=s=>{const[a,b,c]=s.split("-").map(Number);return new Date(a,b-1,c);};
+
+const mondayOf=d=>{const x=startOfDay(d);const off=(x.getDay()+6)%7;return new Date(x.getTime()-off*DAY);};
+const CATS=["yuefu","hanfu","tangshi","songci","yuanqu","shijing","guwen"];
+const TOTAL=CATS.reduce((s,c)=>s+CORPUS[c].items.length,0);
+const pid=(c,it)=>c+"/"+it.title;
+const getSet=k=>{try{return new Set(JSON.parse(localStorage.getItem(k)||"[]"));}catch(_){return new Set();}};
+const putSet=(k,s)=>localStorage.setItem(k,JSON.stringify([...s]));
+
+let START=localStorage.getItem("gx_start");
+START=START?parseKey(START):mondayOf(new Date());
+if(!localStorage.getItem("gx_start"))localStorage.setItem("gx_start",keyOf(START));
+
+let FS=parseFloat(localStorage.getItem("gx_font")||"1");
+const applyFont=()=>document.documentElement.style.setProperty("--fs",FS);
+applyFont();
+
+let viewItem=null, viewCat=null, bookMode=false, curId=null, pendingSel=null, curNote=null;
+
+// 不重複：以使用者的「開始週」為起點逐週推進，讀完整輪才循環
+function pieceFor(date){
+  const cat=WEEKDAY_MAP[date.getDay()];
+  const b=CORPUS[cat], n=b.items.length;
+  const wk=Math.floor((startOfDay(date)-START)/(7*DAY));
+  let i=wk%n; if(i<0)i+=n;
+  return {cat,label:b.label,item:b.items[i],round:Math.floor(wk/n)};
+}
+
+// 卡片內容（今日與藏書閣共用）
+function fillCard(cat,label,item){
+  $("cat").textContent=label;
+  $("excerptTag").classList.toggle("show",!!item.excerpt);
+  $("meta").textContent=`${item.dynasty}　${item.author}`;
+  $("title").textContent=item.title;
+  curId=pid(cat,item);
+  renderOrigin(item,curId);
+  $("bestText").textContent=item.best;
+  $("notes").textContent=item.notes; $("trans").textContent=item.trans;
+  $("appr").textContent=item.appr; $("bio").textContent=item.bio; $("reflect").textContent=item.reflect;
+  ["d-notes","d-trans","d-appr"].forEach(x=>$(x).open=false);
+  $("d-bio").open=true; $("d-reflect").open=true;
+  viewItem=item; viewCat=cat;
+  const marked=getSet("gx_marks").has(pid(cat,item));
+  $("star").classList.toggle("on",marked); $("star").textContent=marked?"★":"☆";
+  const rd=getSet("gx_read"), id=pid(cat,item);
+  if(!rd.has(id)){rd.add(id);putSet("gx_read",rd);}
+  const card=$("card"); card.classList.remove("turn"); void card.offsetWidth; card.classList.add("turn");
+  $("progress").innerHTML=`已讀 <b>${getSet("gx_read").size}</b> ／ 共 ${TOTAL} 篇`;
+  inkOn=false; card.classList.remove("inking");
+  sizeInk(); loadInkFor();
+}
+
+// 藏書閣：自由翻閱任一篇（不寫日記）
+function viewPiece(cat,idx){
+  bookMode=true;
+  const b=CORPUS[cat];
+  document.querySelector(".diary").style.display="none";
+  $("bookbarText").textContent=`藏書閣閱讀 · ${b.label}`;
+  $("bookbar").classList.add("show");
+  $("dateText").textContent=`${b.label}　第 ${idx+1} 篇／共 ${b.items.length} 篇`;
+  fillCard(cat,b.label,b.items[idx]);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+let current=startOfDay(new Date());
+
+/* ---------- 渲染今日（日記模式） ---------- */
+function render(){
+  bookMode=false;
+  $("bookbar").classList.remove("show");
+  document.querySelector(".diary").style.display="";
+  const {cat,label,item}=pieceFor(current);
+  $("dateText").textContent=`${current.getFullYear()}年${current.getMonth()+1}月${current.getDate()}日　${WD_CH[current.getDay()]}`;
+  fillCard(cat,label,item);
+  $("entry").value=localStorage.getItem("diary:"+keyOf(current))||"";
+  updateCount(); $("saveState").textContent="";
+  if(diaryMode==="draw"){sizeDiary();loadDiary();}
+  $("next").disabled=startOfDay(current)>=startOfDay(new Date());
+  updateStreak();
+}
+
+function updateCount(){
+  const n=$("entry").value.replace(/\s/g,"").length;
+  $("count").textContent=n+" 字";
+}
+function updateStreak(){
+  let n=0,d=startOfDay(new Date());
+  while(true){
+    const dk=keyOf(d), t=localStorage.getItem("diary:"+dk), c=localStorage.getItem("gx_canvas:"+dk);
+    if((t&&t.trim())||c){n++;d=new Date(d.getTime()-DAY);}else break;
+  }
+  $("streak").textContent="連續 "+n+" 天";
+}
+
+/* ---------- 隨筆自動儲存 ---------- */
+let timer;
+$("entry").addEventListener("input",()=>{
+  updateCount();
+  $("saveState").textContent="輸入中…";
+  clearTimeout(timer);
+  timer=setTimeout(saveEntry,400);
+});
+function saveEntry(){
+  const k="diary:"+keyOf(current), v=$("entry").value;
+  if(v.trim()) localStorage.setItem(k,v); else localStorage.removeItem(k);
+  const t=new Date();
+  $("saveState").textContent=`已儲存 ✓ ${pad(t.getHours())}:${pad(t.getMinutes())}`;
+  updateStreak();
+}
+
+/* ---------- 朗讀 ---------- */
+$("speak").addEventListener("click",()=>{
+  if(!("speechSynthesis" in window)){alert("此瀏覽器不支援朗讀功能。");return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance((viewItem?viewItem.text:"").replace(/\n/g,"，"));
+  u.lang="zh-TW"; u.rate=.85; speechSynthesis.speak(u);
+});
+
+/* ---------- 導覽（鍵盤左右翻頁） ---------- */
+$("prev").onclick=()=>{current=new Date(current.getTime()-DAY);render();};
+$("next").onclick=()=>{if(!$("next").disabled){current=new Date(current.getTime()+DAY);render();}};
+$("todayBtn").onclick=()=>{current=startOfDay(new Date());render();};
+$("backToday").onclick=()=>{current=startOfDay(new Date());render();window.scrollTo({top:0,behavior:"smooth"});};
+document.addEventListener("keydown",e=>{
+  if($("mask").classList.contains("show")||e.target.tagName==="TEXTAREA"||bookMode)return;
+  if(e.key==="ArrowLeft")$("prev").click();
+  if(e.key==="ArrowRight"&&!$("next").disabled)$("next").click();
+});
+
+/* ---------- 書籤 / 字級 ---------- */
+$("star").onclick=()=>{
+  if(!viewItem)return;
+  const s=getSet("gx_marks"), id=pid(viewCat,viewItem);
+  s.has(id)?s.delete(id):s.add(id); putSet("gx_marks",s);
+  $("star").classList.toggle("on",s.has(id)); $("star").textContent=s.has(id)?"★":"☆";
+};
+$("fsUp").onclick=()=>{FS=Math.min(1.6,Math.round((FS+0.1)*10)/10);localStorage.setItem("gx_font",FS);applyFont();sizeInk();loadInkFor();};
+$("fsDown").onclick=()=>{FS=Math.max(0.8,Math.round((FS-0.1)*10)/10);localStorage.setItem("gx_font",FS);applyFont();sizeInk();loadInkFor();};
+
+/* ---------- 目錄 / 回顧（分頁模態） ---------- */
+$("tocBtn").onclick=()=>openModal("toc");
+$("closeModal").onclick=()=>$("mask").classList.remove("show");
+$("mask").addEventListener("click",e=>{if(e.target===$("mask"))$("mask").classList.remove("show");});
+$("tabToc").onclick=()=>switchTab("toc");
+$("tabHist").onclick=()=>switchTab("hist");
+function openModal(which){buildToc();buildHist();switchTab(which);$("mask").classList.add("show");}
+function switchTab(w){
+  const toc=w==="toc";
+  $("tabToc").classList.toggle("on",toc); $("tabHist").classList.toggle("on",!toc);
+  $("tocPane").style.display=toc?"":"none"; $("histPane").style.display=toc?"none":"";
+  $("modalTitle").firstChild.textContent=toc?"目錄 ":"回顧 · 我的隨筆 ";
+}
+function buildToc(){
+  const rd=getSet("gx_read"), mk=getSet("gx_marks"), pane=$("tocPane"); pane.innerHTML="";
+  const marked=[];
+  CATS.forEach(c=>CORPUS[c].items.forEach((it,idx)=>{if(mk.has(pid(c,it)))marked.push([c,idx,it]);}));
+  if(marked.length){
+    const box=document.createElement("div");box.className="toc-chap";
+    box.innerHTML=`<h3>★ 我的書籤 <small>${marked.length} 篇</small></h3>`;
+    marked.forEach(([c,idx,it])=>box.appendChild(tocRow(c,idx,it,rd,mk)));
+    pane.appendChild(box);
+  }
+  CATS.forEach(c=>{
+    const b=CORPUS[c], readN=b.items.filter(it=>rd.has(pid(c,it))).length;
+    const box=document.createElement("div");box.className="toc-chap";
+    box.innerHTML=`<h3>${b.label} <small>已讀 ${readN}／${b.items.length}</small></h3>`;
+    b.items.forEach((it,idx)=>box.appendChild(tocRow(c,idx,it,rd,mk)));
+    pane.appendChild(box);
+  });
+}
+function tocRow(c,idx,it,rd,mk){
+  const row=document.createElement("div");row.className="toc-item";
+  const read=rd.has(pid(c,it)), marked=mk.has(pid(c,it));
+  row.innerHTML=`<span class="rd">${read?"✓":"　"}</span><span class="tk">${it.title}</span><span class="ttag">${it.dynasty}</span><span class="mk ${marked?"on":""}">${marked?"★":"☆"}</span>`;
+  row.querySelector(".mk").onclick=e=>{
+    e.stopPropagation();
+    const s=getSet("gx_marks"), id=pid(c,it);
+    s.has(id)?s.delete(id):s.add(id); putSet("gx_marks",s); buildToc();
+    if(viewItem&&pid(viewCat,viewItem)===id){$("star").classList.toggle("on",s.has(id));$("star").textContent=s.has(id)?"★":"☆";}
+  };
+  row.onclick=()=>{$("mask").classList.remove("show");viewPiece(c,idx);};
+  return row;
+}
+
+function allEntries(){
+  const out=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith("diary:")){const v=localStorage.getItem(k);if(v&&v.trim())out.push([k.slice(6),v]);}
+  }
+  out.sort((a,b)=>a[0]<b[0]?1:-1);
+  return out;
+}
+function buildHist(){
+  const list=$("histList"), dates=allDiaryDates();
+  list.innerHTML="";
+  $("histEmpty").style.display=dates.length?"none":"block";
+  dates.forEach(ds=>{
+    const d=parseKey(ds), {label,item}=pieceFor(d);
+    const txt=localStorage.getItem("diary:"+ds)||"";
+    const canv=localStorage.getItem("gx_canvas:"+ds);
+    const li=document.createElement("li");
+    const hd=document.createElement("div");hd.className="hd";hd.textContent=`${ds}　${WD_CH[d.getDay()]}`+(canv?"　🖌":"");
+    const hp=document.createElement("div");hp.className="hp";hp.textContent=`${label}· ${item.author}〈${item.title}〉`;
+    li.append(hd,hp);
+    if(txt.trim()){const hx=document.createElement("div");hx.className="hx";hx.textContent=txt;li.appendChild(hx);}
+    if(canv){const im=document.createElement("img");im.className="histimg";im.src=canv;li.appendChild(im);}
+    li.onclick=()=>{current=d;render();$("mask").classList.remove("show");window.scrollTo({top:0,behavior:"smooth"});};
+    list.appendChild(li);
+  });
+}
+
+/* ---------- 匯出 / 備份 / 還原 ---------- */
+function download(name,text,type){
+  const b=new Blob([text],{type:type||"text/plain;charset=utf-8"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(b);a.download=name;a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+$("expMd").onclick=()=>{
+  const dates=allDiaryDates();
+  if(!dates.length){alert("還沒有隨筆可以匯出。");return;}
+  let md="# 每日國學 · 隨筆備份\n\n匯出時間："+new Date().toLocaleString()+"\n\n";
+  dates.forEach(ds=>{
+    const d=parseKey(ds),{label,item}=pieceFor(d);
+    const txt=localStorage.getItem("diary:"+ds)||"";
+    const canv=localStorage.getItem("gx_canvas:"+ds);
+    md+=`## ${ds}（${WD_CH[d.getDay()]}）· ${label} · ${item.author}〈${item.title}〉\n\n`;
+    if(txt.trim())md+=txt+"\n\n";
+    if(canv)md+=`![手繪](${canv})\n\n`;
+    md+="---\n\n";
+  });
+  download(`每日國學隨筆_${keyOf(new Date())}.md`,md,"text/markdown;charset=utf-8");
+};
+$("expJson").onclick=()=>{
+  const obj={app:"每日國學日記",exported:new Date().toISOString(),entries:{},canvases:{}};
+  allEntries().forEach(([ds,txt])=>obj.entries[ds]=txt);
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("gx_canvas:"))obj.canvases[k.slice(10)]=localStorage.getItem(k);}
+  download(`每日國學備份_${keyOf(new Date())}.json`,JSON.stringify(obj,null,2),"application/json");
+};
+$("impJson").onchange=e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const o=JSON.parse(r.result);
+      if(!o.entries&&!o.canvases)throw 0;
+      let c=0;
+      Object.entries(o.entries||{}).forEach(([k,v])=>{if(v&&v.trim()){localStorage.setItem("diary:"+k,v);c++;}});
+      Object.entries(o.canvases||{}).forEach(([k,v])=>{if(v){localStorage.setItem("gx_canvas:"+k,v);c++;}});
+      alert(`已還原 ${c} 筆隨筆／手繪。`);render();buildHist();
+    }catch(_){alert("檔案格式不正確。");}
+  };
+  r.readAsText(f);
+};
+
+/* ---------- 劃線 / 批註（直接在原文上書寫，依篇保存） ---------- */
+function getAnno(){try{return JSON.parse(localStorage.getItem("gx_anno")||"{}");}catch(_){return {};}}
+function setAnnoAll(o){localStorage.setItem("gx_anno",JSON.stringify(o));}
+function annoFor(id){return (getAnno()[id]||[]).map(a=>({...a}));}
+function saveAnnoFor(id,list){const a=getAnno();if(list&&list.length)a[id]=list;else delete a[id];setAnnoAll(a);}
+
+function renderOrigin(item,id){
+  const o=$("origin"), text=item.text;
+  const list=annoFor(id).sort((a,b)=>a.s-b.s);
+  o.textContent="";
+  let pos=0;
+  list.forEach((an,k)=>{
+    if(an.s>pos)o.appendChild(document.createTextNode(text.slice(pos,an.s)));
+    const m=document.createElement("mark");
+    m.className="hl"+(an.note?" hasnote":""); m.dataset.k=k;
+    m.textContent=text.slice(an.s,an.e); o.appendChild(m); pos=an.e;
+  });
+  if(pos<text.length)o.appendChild(document.createTextNode(text.slice(pos)));
+  const maxLen=Math.max(...text.split("\n").map(l=>l.length));
+  o.className="origin "+(maxLen<=14?"center":"left");
+}
+function offsetIn(c,node,off){const r=document.createRange();r.setStart(c,0);r.setEnd(node,off);return r.toString().length;}
+function hideSel(){$("selbar").style.display="none";}
+function captureSel(){
+  const sel=window.getSelection();
+  if(!sel||sel.isCollapsed||!sel.rangeCount){hideSel();return;}
+  const r=sel.getRangeAt(0), o=$("origin");
+  if(!o.contains(r.startContainer)||!o.contains(r.endContainer)){hideSel();return;}
+  let s=offsetIn(o,r.startContainer,r.startOffset), e=offsetIn(o,r.endContainer,r.endOffset);
+  if(s>e){const t=s;s=e;e=t;}
+  if(s===e){hideSel();return;}
+  pendingSel=[s,e];
+  const rect=r.getBoundingClientRect(), bar=$("selbar");
+  bar.style.display="flex";
+  bar.style.left=Math.max(6,window.scrollX+rect.left+rect.width/2-bar.offsetWidth/2)+"px";
+  bar.style.top=(window.scrollY+rect.top-bar.offsetHeight-8)+"px";
+}
+$("origin").addEventListener("mouseup",()=>setTimeout(captureSel,1));
+$("origin").addEventListener("touchend",()=>setTimeout(captureSel,1));
+document.addEventListener("mousedown",e=>{if(!$("selbar").contains(e.target)&&!$("origin").contains(e.target))hideSel();});
+$("origin").addEventListener("click",e=>{const m=e.target.closest("mark.hl");if(m)openNote(parseInt(m.dataset.k));});
+
+function addMark(withNote){
+  if(!pendingSel||!curId)return;
+  const sel=pendingSel.slice();
+  let list=annoFor(curId).filter(a=>a.e<=sel[0]||a.s>=sel[1]);
+  list.push({s:sel[0],e:sel[1],note:""}); list.sort((a,b)=>a.s-b.s);
+  saveAnnoFor(curId,list); renderOrigin(viewItem,curId);
+  hideSel(); window.getSelection().removeAllRanges(); pendingSel=null;
+  if(withNote)openNote(list.findIndex(a=>a.s===sel[0]&&a.e===sel[1]));
+}
+$("mkLine").onclick=()=>addMark(false);
+$("mkNote").onclick=()=>addMark(true);
+
+function openNote(k){
+  const list=annoFor(curId), an=list[k]; if(!an)return;
+  curNote={id:curId,k};
+  $("noteQuote").textContent="「"+viewItem.text.slice(an.s,an.e).replace(/\n/g," ")+"」";
+  $("noteText").value=an.note||"";
+  $("noteMask").classList.add("show"); setTimeout(()=>$("noteText").focus(),60);
+}
+$("noteClose").onclick=()=>$("noteMask").classList.remove("show");
+$("noteMask").addEventListener("click",e=>{if(e.target===$("noteMask"))$("noteMask").classList.remove("show");});
+$("noteSave").onclick=()=>{
+  if(curNote){const list=annoFor(curNote.id);if(list[curNote.k]){list[curNote.k].note=$("noteText").value.trim();saveAnnoFor(curNote.id,list);renderOrigin(viewItem,curId);}}
+  $("noteMask").classList.remove("show");
+};
+$("noteDel").onclick=()=>{
+  if(curNote){const list=annoFor(curNote.id);list.splice(curNote.k,1);saveAnnoFor(curNote.id,list);renderOrigin(viewItem,curId);}
+  $("noteMask").classList.remove("show");
+};
+
+/* ---------- 手寫（用筆/滑鼠直接在頁面上書寫，依篇保存） ---------- */
+let inkOn=false, drawing=false, strokes=[], baseImg=null, penColor="#2b2620", penW=2.8, eraser=false;
+function getInkStore(){try{return JSON.parse(localStorage.getItem("gx_ink")||"{}");}catch(_){return {};}}
+function saveInk(){const s=getInkStore();try{s[curId]=$("inkpad").toDataURL("image/png");}catch(_){return;}localStorage.setItem("gx_ink",JSON.stringify(s));}
+function sizeInk(){const c=$("inkpad"),w=$("readblock");if(!c||!w)return;const W=w.clientWidth,H=w.clientHeight;c.width=W;c.height=H;c.style.width=W+"px";c.style.height=H+"px";const x=c.getContext("2d");x.lineCap="round";x.lineJoin="round";}
+function redrawInk(){const c=$("inkpad");if(!c)return;const x=c.getContext("2d");x.clearRect(0,0,c.width,c.height);if(baseImg)x.drawImage(baseImg,0,0,c.width,c.height);strokes.forEach(st=>{x.globalCompositeOperation=st.eraser?"destination-out":"source-over";x.strokeStyle=st.color;x.lineWidth=st.width;x.beginPath();st.points.forEach((p,i)=>i?x.lineTo(p.x,p.y):x.moveTo(p.x,p.y));x.stroke();});x.globalCompositeOperation="source-over";}
+function loadInkFor(){strokes=[];baseImg=null;const c=$("inkpad");if(!c)return;c.getContext("2d").clearRect(0,0,c.width,c.height);const data=getInkStore()[curId];if(data){const img=new Image();img.onload=()=>{baseImg=img;redrawInk();};img.src=data;}}
+function setInk(on){inkOn=on;$("card").classList.toggle("inking",on);if(on){sizeInk();redrawInk();}}
+function markTool(){$("inkBlack").classList.toggle("on",!eraser&&penColor==="#2b2620");$("inkRed").classList.toggle("on",!eraser&&penColor==="#9c6a5e");$("inkEraser").classList.toggle("on",eraser);$("inkThin").classList.toggle("on",penW===1.6);$("inkMid").classList.toggle("on",penW===2.8);$("inkThick").classList.toggle("on",penW===5);}
+(function(){
+  const c=$("inkpad"); if(!c)return;
+  c.addEventListener("pointerdown",e=>{if(!inkOn)return;e.preventDefault();drawing=true;try{c.setPointerCapture(e.pointerId);}catch(_){}const pr=e.pressure>0?0.6+e.pressure*0.8:1;strokes.push({color:penColor,width:(eraser?penW*6:penW)*pr,eraser,points:[{x:e.offsetX,y:e.offsetY}]});});
+  c.addEventListener("pointermove",e=>{if(!inkOn||!drawing)return;const st=strokes[strokes.length-1];st.points.push({x:e.offsetX,y:e.offsetY});const x=c.getContext("2d"),n=st.points.length;x.globalCompositeOperation=st.eraser?"destination-out":"source-over";x.strokeStyle=st.color;x.lineWidth=st.width;x.beginPath();x.moveTo(st.points[n-2].x,st.points[n-2].y);x.lineTo(st.points[n-1].x,st.points[n-1].y);x.stroke();x.globalCompositeOperation="source-over";});
+  c.addEventListener("pointerup",()=>{if(drawing){drawing=false;saveInk();}});
+  c.addEventListener("pointercancel",()=>{drawing=false;});
+})();
+$("inkToggle").onclick=()=>setInk(!inkOn);
+$("inkDone").onclick=()=>setInk(false);
+$("inkUndo").onclick=()=>{strokes.pop();redrawInk();saveInk();};
+$("inkClear").onclick=()=>{strokes=[];baseImg=null;const c=$("inkpad");c.getContext("2d").clearRect(0,0,c.width,c.height);const s=getInkStore();delete s[curId];localStorage.setItem("gx_ink",JSON.stringify(s));};
+$("inkBlack").onclick=()=>{penColor="#2b2620";eraser=false;markTool();};
+$("inkRed").onclick=()=>{penColor="#9c6a5e";eraser=false;markTool();};
+$("inkThin").onclick=()=>{penW=1.6;markTool();};
+$("inkMid").onclick=()=>{penW=2.8;markTool();};
+$("inkThick").onclick=()=>{penW=5;markTool();};
+$("inkEraser").onclick=()=>{eraser=!eraser;markTool();};
+
+/* ---------- 隨筆自由畫布（依日期，可自由發揮） ---------- */
+let diaryMode=localStorage.getItem("gx_diarymode")||"draw";
+let dDrawing=false, dStrokes=[], dBase=null, dColor="#3a352f", dWidth=2.8, dErase=false;
+function diaryKey(){return "gx_canvas:"+keyOf(current);}
+function sizeDiary(){const c=$("diarypad");if(!c||$("drawWrap").style.display==="none")return;const W=Math.round(c.getBoundingClientRect().width)||Math.round($("drawWrap").getBoundingClientRect().width)||600;c.width=Math.max(60,W);c.height=340;const x=c.getContext("2d");x.lineCap="round";x.lineJoin="round";}
+function redrawDiary(){const c=$("diarypad");if(!c)return;const x=c.getContext("2d");x.clearRect(0,0,c.width,c.height);if(dBase)x.drawImage(dBase,0,0,c.width,c.height);dStrokes.forEach(st=>{x.globalCompositeOperation=st.e?"destination-out":"source-over";x.strokeStyle=st.color;x.lineWidth=st.width;x.beginPath();st.points.forEach((p,i)=>i?x.lineTo(p.x,p.y):x.moveTo(p.x,p.y));x.stroke();});x.globalCompositeOperation="source-over";}
+function loadDiary(){dStrokes=[];dBase=null;const c=$("diarypad");if(!c)return;c.getContext("2d").clearRect(0,0,c.width,c.height);const data=localStorage.getItem(diaryKey());if(data){const img=new Image();img.onload=()=>{dBase=img;redrawDiary();};img.src=data;}}
+function saveDiary(){try{localStorage.setItem(diaryKey(),$("diarypad").toDataURL("image/png"));$("saveState").textContent="已儲存 ✓";}catch(_){}}
+function dwTool(){$("dThin").classList.toggle("on",dWidth===1.8);$("dMid").classList.toggle("on",dWidth===2.8);$("dThick").classList.toggle("on",dWidth===5.5);}
+function setDiaryMode(draw){
+  diaryMode=draw?"draw":"type"; localStorage.setItem("gx_diarymode",diaryMode);
+  $("modeDraw").classList.toggle("on",draw); $("modeType").classList.toggle("on",!draw);
+  $("drawWrap").style.display=draw?"":"none"; $("entry").style.display=draw?"none":"";
+  $("count").style.display=draw?"none":"";
+  if(draw){sizeDiary();loadDiary();}
+}
+(function(){
+  const c=$("diarypad"); if(!c)return;
+  c.addEventListener("pointerdown",e=>{e.preventDefault();dDrawing=true;try{c.setPointerCapture(e.pointerId);}catch(_){}const pr=e.pressure>0?0.6+e.pressure*0.8:1;dStrokes.push({color:dColor,width:(dErase?dWidth*7:dWidth)*pr,e:dErase,points:[{x:e.offsetX,y:e.offsetY}]});});
+  c.addEventListener("pointermove",e=>{if(!dDrawing)return;const st=dStrokes[dStrokes.length-1];st.points.push({x:e.offsetX,y:e.offsetY});const x=c.getContext("2d"),n=st.points.length;x.globalCompositeOperation=st.e?"destination-out":"source-over";x.strokeStyle=st.color;x.lineWidth=st.width;x.beginPath();x.moveTo(st.points[n-2].x,st.points[n-2].y);x.lineTo(st.points[n-1].x,st.points[n-1].y);x.stroke();x.globalCompositeOperation="source-over";});
+  c.addEventListener("pointerup",()=>{if(dDrawing){dDrawing=false;saveDiary();updateStreak();}});
+  c.addEventListener("pointercancel",()=>{dDrawing=false;});
+})();
+document.querySelectorAll(".dtools .dc").forEach(b=>b.onclick=()=>{dColor=b.dataset.c;dErase=false;document.querySelectorAll(".dtools .dc").forEach(x=>x.classList.remove("on"));b.classList.add("on");$("dEraser").classList.remove("on");});
+$("dThin").onclick=()=>{dWidth=1.8;dErase=false;$("dEraser").classList.remove("on");dwTool();};
+$("dMid").onclick=()=>{dWidth=2.8;dErase=false;$("dEraser").classList.remove("on");dwTool();};
+$("dThick").onclick=()=>{dWidth=5.5;dErase=false;$("dEraser").classList.remove("on");dwTool();};
+$("dEraser").onclick=()=>{dErase=!dErase;$("dEraser").classList.toggle("on",dErase);};
+$("dUndo").onclick=()=>{dStrokes.pop();redrawDiary();saveDiary();updateStreak();};
+$("dClear").onclick=()=>{dStrokes=[];dBase=null;const c=$("diarypad");c.getContext("2d").clearRect(0,0,c.width,c.height);localStorage.removeItem(diaryKey());$("saveState").textContent="";updateStreak();};
+$("modeDraw").onclick=()=>setDiaryMode(true);
+$("modeType").onclick=()=>setDiaryMode(false);
+window.addEventListener("resize",()=>{if(diaryMode==="draw"){sizeDiary();loadDiary();}});
+function allDiaryDates(){
+  const set=new Set();
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k)continue;
+    if(k.startsWith("diary:")){const v=localStorage.getItem(k);if(v&&v.trim())set.add(k.slice(6));}
+    else if(k.startsWith("gx_canvas:"))set.add(k.slice(10));}
+  return [...set].sort((a,b)=>a<b?1:-1);
+}
+setDiaryMode(diaryMode==="draw");
+
+render();
+</script>
+<script>if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}</script>
+</body>
+</html>
