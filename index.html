@@ -13,9 +13,11 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
   :root{
-    --paper:#e4ded3; --paper2:#d8d1c4; --card:#efeae2;
-    --ink:#4b453e; --ink-soft:#8c8377; --line:#cec5b6;
+    --paper:#e4ded3; --paper2:#d8d1c4; --paper0:#efe9de; --card:#efeae2;
+    --ink:#4b453e; --ink-soft:#8c8377; --ink2:var(--ink2); --line:#cec5b6;
     --seal:#a07a6f; --gold:#a99a78;
+    --surface:var(--surface); --sheet:#f4f0e7; --mixdark:#231e1b;
+    --moon-lit:#a59b89; --moon-dark:rgba(120,108,92,.10); --moon-edge:rgba(75,69,62,.4);
     --kai:"DFKai-SB","標楷體","BiauKai","KaiTi","Kaiti TC","Noto Serif TC","Songti TC",serif;
     --sans:"Noto Sans TC","Microsoft JhengHei","PingFang TC","Segoe UI",sans-serif;
   }
@@ -24,7 +26,7 @@
   body{
     font-family:var(--sans); color:var(--ink); line-height:1.8;
     background:
-      radial-gradient(120% 80% at 50% -10%, #efe9de 0%, var(--paper) 55%, var(--paper2) 100%) fixed;
+      radial-gradient(120% 80% at 50% -10%, var(--paper0) 0%, var(--paper) 55%, var(--paper2) 100%) fixed;
     min-height:100vh; padding:28px 16px 64px;
   }
   .wrap{max-width:720px;margin:0 auto;position:relative}
@@ -101,7 +103,7 @@
   summary::before{content:"＋";color:var(--gold);font-size:15px;width:14px}
   details[open] summary::before{content:"－"}
   details[open] summary{color:var(--ink)}
-  .sec{padding:2px 4px 14px 24px;font-size:15px;color:#3f3a31;line-height:1.95}
+  .sec{padding:2px 4px 14px 24px;font-size:15px;color:var(--ink2);line-height:1.95}
   #d-reflect .sec{color:var(--seal)}
   .toolrow{display:flex;gap:8px;margin:6px 0 14px}
   .speak{
@@ -121,7 +123,7 @@
   .savestate{font-family:var(--sans);font-size:12px;color:var(--gold);font-weight:400;letter-spacing:0}
   textarea#entry{
     width:100%;min-height:150px;resize:vertical;border:1px solid var(--line);
-    border-radius:8px;background:#fffdf7;padding:14px;font-family:var(--kai);
+    border-radius:8px;background:var(--surface);padding:14px;font-family:var(--kai);
     font-size:16px;line-height:1.9;color:var(--ink);letter-spacing:.03em
   }
   textarea#entry:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(169,134,63,.12)}
@@ -132,7 +134,7 @@
     font-family:var(--sans);font-size:14px;padding:8px 16px;border-radius:22px;cursor:pointer;
     border:1px solid var(--line);background:var(--card);color:var(--ink);letter-spacing:.05em
   }
-  nav.controls button:hover:not(:disabled){border-color:var(--gold);background:#fff}
+  nav.controls button:hover:not(:disabled){border-color:var(--gold);background:var(--surface)}
   nav.controls button:disabled{opacity:.4;cursor:default}
   #today{background:var(--seal);color:#fff;border-color:var(--seal)}
 
@@ -150,17 +152,17 @@
   .hist{list-style:none;margin:0;padding:0}
   .hist li{
     padding:11px 12px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;
-    cursor:pointer;background:#fffdf7;transition:.15s
+    cursor:pointer;background:var(--surface);transition:.15s
   }
   .hist li:hover{border-color:var(--gold);transform:translateY(-1px)}
   .hist .hd{font-family:var(--kai);font-size:14px;color:var(--ink)}
   .hist .hp{font-size:12px;color:var(--ink-soft);margin-top:2px}
-  .hist .hx{font-size:13px;color:#4a4338;margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .hist .hx{font-size:13px;color:var(--ink2);margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .empty{color:var(--ink-soft);font-size:14px;text-align:center;padding:20px}
   .modal-foot{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
   .modal-foot button,.modal-foot label{
     font-family:var(--sans);font-size:13px;padding:6px 13px;border-radius:18px;cursor:pointer;
-    border:1px solid var(--line);background:#fffdf7;color:var(--ink)
+    border:1px solid var(--line);background:var(--surface);color:var(--ink)
   }
   .modal-foot button:hover,.modal-foot label:hover{border-color:var(--gold)}
   footer.tip{text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:26px;letter-spacing:.05em;opacity:.8}
@@ -185,12 +187,12 @@
   #card.turn{animation:pageturn .3s ease}
   @keyframes pageturn{from{opacity:.2;transform:translateX(12px)}to{opacity:1;transform:none}}
   .tabs{display:flex;gap:6px;margin-bottom:14px}
-  .tabs button{flex:1;font-family:var(--kai);font-size:15px;padding:8px;border-radius:8px;border:1px solid var(--line);background:#fffdf7;color:var(--ink-soft);cursor:pointer;letter-spacing:.1em}
+  .tabs button{flex:1;font-family:var(--kai);font-size:15px;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);cursor:pointer;letter-spacing:.1em}
   .tabs button.on{background:var(--seal);color:#fff;border-color:var(--seal)}
   .toc-chap{margin-bottom:16px}
   .toc-chap h3{font-family:var(--kai);font-size:15px;margin:0 0 7px;color:var(--seal);letter-spacing:.12em;display:flex;justify-content:space-between;align-items:baseline}
   .toc-chap h3 small{color:var(--ink-soft);font-size:11.5px;font-family:var(--sans);letter-spacing:0}
-  .toc-item{display:flex;align-items:center;gap:9px;padding:8px 11px;border:1px solid var(--line);border-radius:7px;margin-bottom:5px;cursor:pointer;background:#fffdf7;transition:.15s}
+  .toc-item{display:flex;align-items:center;gap:9px;padding:8px 11px;border:1px solid var(--line);border-radius:7px;margin-bottom:5px;cursor:pointer;background:var(--surface);transition:.15s}
   .toc-item:hover{border-color:var(--gold);transform:translateY(-1px)}
   .toc-item .rd{color:var(--gold);font-size:13px;width:14px;text-align:center}
   .toc-item .tk{font-family:var(--kai);color:var(--ink);flex:1;font-size:14.5px;letter-spacing:.04em}
@@ -208,7 +210,7 @@
   .selbar button:hover{background:rgba(255,255,255,.13)}
   .selbar button+button{border-left:1px solid rgba(255,255,255,.16)}
   .notequote{font-family:var(--kai);color:var(--seal);font-size:16px;margin-bottom:10px;padding:8px 12px;background:rgba(160,122,111,.12);border-left:3px solid var(--seal);border-radius:0 6px 6px 0}
-  #noteText{width:100%;min-height:120px;border:1px solid var(--line);border-radius:8px;background:#fffdf7;padding:12px;font-family:var(--kai);font-size:15px;line-height:1.9;color:var(--ink);resize:vertical;letter-spacing:.03em}
+  #noteText{width:100%;min-height:120px;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:12px;font-family:var(--kai);font-size:15px;line-height:1.9;color:var(--ink);resize:vertical;letter-spacing:.03em}
   #noteText:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(169,134,63,.12)}
   #noteDel{color:var(--seal);border-color:var(--seal)}
 
@@ -228,17 +230,17 @@
   /* ---- 隨筆自由畫布 ---- */
   .diary h3{flex-wrap:wrap;gap:8px}
   .diary-modes{display:inline-flex;gap:5px;font-family:var(--sans)}
-  .diary-modes button{font-size:12px;padding:3px 11px;border-radius:13px;border:1px solid var(--line);background:#fffdf7;color:var(--ink-soft);cursor:pointer}
+  .diary-modes button{font-size:12px;padding:3px 11px;border-radius:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);cursor:pointer}
   .diary-modes button.on{background:var(--seal);color:#fff;border-color:var(--seal)}
   .dtools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}
   .dtools .dc{width:22px;height:22px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;box-shadow:0 1px 2px rgba(0,0,0,.15)}
   .dtools .dc.on{border-color:var(--ink)}
   .dtools .dsep{width:1px;height:18px;background:var(--line);margin:0 3px}
-  .dtools button:not(.dc){font-family:var(--sans);font-size:12.5px;padding:4px 11px;border-radius:13px;border:1px solid var(--line);background:#fffdf7;color:var(--ink);cursor:pointer}
+  .dtools button:not(.dc){font-family:var(--sans);font-size:12.5px;padding:4px 11px;border-radius:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
   .dtools button:not(.dc):hover{border-color:var(--gold)}
-  .dtools button:not(.dc).on{border-color:var(--gold);background:#fff}
-  #diarypad{width:100%;height:340px;display:block;border:1px solid var(--line);border-radius:8px;cursor:crosshair;touch-action:none;background:repeating-linear-gradient(#fffdf7,#fffdf7 33px,#efe7d4 34px)}
-  .histimg{max-width:100%;border:1px solid var(--line);border-radius:6px;margin-top:8px;background:#fffdf7;display:block}
+  .dtools button:not(.dc).on{border-color:var(--gold);background:var(--surface)}
+  #diarypad{width:100%;height:340px;display:block;border:1px solid var(--line);border-radius:8px;cursor:crosshair;touch-action:none;background:repeating-linear-gradient(#fdfbf4,#fdfbf4 33px,#e7dfce 34px)}
+  .histimg{max-width:100%;border:1px solid var(--line);border-radius:6px;margin-top:8px;background:var(--surface);display:block}
 
   /* ---- Hobonichi 手帳版面 ---- */
   .viewtoggle{display:inline-flex;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--card)}
@@ -251,7 +253,7 @@
 
   .hobo-sheet{
     position:relative;border:1px solid var(--line);border-radius:10px;
-    background-color:#f4f0e7;
+    background-color:var(--sheet);
     background-image:radial-gradient(rgba(120,108,92,.30) 1px,transparent 1.5px);
     background-size:18px 18px;background-position:14px 14px;
     box-shadow:0 12px 34px -20px rgba(80,60,30,.55);
@@ -266,7 +268,11 @@
   .hd-mon{font-size:16px;letter-spacing:.18em;color:var(--seal);font-weight:700;font-family:var(--sans)}
   .hd-wd{font-size:13px;color:var(--ink-soft);letter-spacing:.1em;margin-top:2px;font-family:var(--sans)}
   .hd-extra{font-size:12px;color:var(--ink-soft);margin-top:6px;letter-spacing:.04em;font-family:var(--sans)}
-  .hd-extra .moon{font-size:14px;filter:grayscale(.3);margin-right:3px}
+  .hd-extra .moon,.hd-lunar .moon{display:inline-flex;align-items:center;margin-right:4px}
+  .moonsvg{vertical-align:-2px}
+  .hd-lunar{font-size:12px;color:var(--ink-soft);margin-top:6px;letter-spacing:.04em;font-family:var(--sans)}
+  .hd-lunar .jq{color:var(--seal);font-weight:700;margin-left:6px}
+  .hd-lunar .jq.on{padding:0 6px;border-radius:8px;background:color-mix(in srgb,var(--seal) 16%,transparent)}
 
   .hobo-cal{font-family:var(--sans);flex-shrink:0}
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
@@ -276,7 +282,7 @@
   .cal-day.cur{background:var(--seal);color:#fff}
   .cal-day.today:not(.cur){box-shadow:inset 0 0 0 1.5px var(--gold)}
   .cal-day.dot::after{content:"";position:absolute;bottom:1px;width:3px;height:3px;border-radius:50%;background:var(--gold)}
-  .cal-day.cur.dot::after{background:#fff}
+  .cal-day.cur.dot::after{background:var(--surface)}
   .cal-blank{width:20px;height:19px}
 
   /* 月份側邊 tab */
@@ -288,7 +294,7 @@
   /* 工具列 + 模式切換 */
   .hobo-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:7px 0 3px}
   .hobo-modes{display:inline-flex;gap:5px;margin-right:auto}
-  .hobo-modes button{font-family:var(--sans);font-size:12px;padding:3px 12px;border-radius:13px;border:1px solid var(--line);background:#fffdf7;color:var(--ink-soft);cursor:pointer}
+  .hobo-modes button{font-family:var(--sans);font-size:12px;padding:3px 12px;border-radius:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);cursor:pointer}
   .hobo-modes button.on{background:var(--seal);color:#fff;border-color:var(--seal)}
   .hb-save{font-size:11.5px;color:var(--gold);letter-spacing:.04em}
   #hbEntry{display:none;width:100%;min-height:260px;resize:vertical;border:none;border-radius:8px;background:rgba(255,253,247,.55);padding:11px 13px;margin-top:10px;font-family:var(--kai);font-size:16px;line-height:1.95;color:var(--ink);letter-spacing:.03em;position:relative;z-index:2}
@@ -297,7 +303,7 @@
   .hobo-tools .hdc{width:18px;height:18px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;box-shadow:0 1px 2px rgba(0,0,0,.15)}
   .hobo-tools .hdc.on{border-color:var(--ink)}
   .hobo-tools button:not(.hdc){font-family:var(--sans);font-size:11.5px;padding:3px 9px;border-radius:12px;border:1px solid var(--line);background:rgba(255,253,247,.72);color:var(--ink);cursor:pointer}
-  .hobo-tools button:not(.hdc).on{border-color:var(--gold);background:#fff}
+  .hobo-tools button:not(.hdc).on{border-color:var(--gold);background:var(--surface)}
   .hobo-tools .hsep{width:1px;height:15px;background:var(--line);margin:0 2px}
 
   /* 主體：時間軸 + 書寫區 */
@@ -312,7 +318,7 @@
   .hp-text{font-family:var(--kai);font-size:16px;line-height:1.95;color:var(--ink);white-space:pre-line;letter-spacing:.03em;max-width:33em}
   .hp-extra{max-width:34em}
   .hp-sec-h{font-family:var(--kai);font-size:13.5px;color:var(--seal);letter-spacing:.12em;margin:15px 0 4px;padding-bottom:3px;border-bottom:1px solid rgba(160,122,111,.28)}
-  .hp-sec{font-family:var(--sans);font-size:13.5px;color:#3f3a31;line-height:1.92;letter-spacing:.02em;white-space:pre-line}
+  .hp-sec{font-family:var(--sans);font-size:13.5px;color:var(--ink2);line-height:1.92;letter-spacing:.02em;white-space:pre-line}
   .hp-reflect{color:var(--seal)}
   #hbPad{position:absolute;inset:0;z-index:2;touch-action:none;cursor:crosshair}
 
@@ -365,7 +371,7 @@
 
   .bk-sec-h{font-family:var(--kai);font-size:15px;color:var(--seal);letter-spacing:.12em;margin:0 0 7px;padding-bottom:5px;border-bottom:1px solid rgba(160,122,111,.3)}
   .bk-sec-h.mt{margin-top:22px}
-  .bk-sec{font-size:calc(15px * var(--fs));color:#3f3a31;line-height:1.95}
+  .bk-sec{font-size:calc(15px * var(--fs));color:var(--ink2);line-height:1.95}
 
   .book-extra{margin-top:14px}
   .book-extra details{border-top:1px solid var(--line);padding:4px 0}
@@ -384,13 +390,13 @@
   .hd-mon,.bk-sec-h,.hp-sec-h,details[open] summary,.best,.bk-best,.hobo-quote{
     transition:background-color .4s ease,color .4s ease,border-color .4s ease
   }
-  .best,.bk-best{background:color-mix(in srgb,var(--seal) 13%,transparent);color:color-mix(in srgb,var(--seal) 78%,#231e1b)}
-  .hobo-quote{background:color-mix(in srgb,var(--seal) 9%,transparent);border-top-color:color-mix(in srgb,var(--seal) 42%,transparent);color:color-mix(in srgb,var(--seal) 80%,#231e1b)}
+  .best,.bk-best{background:color-mix(in srgb,var(--seal) 13%,transparent);color:color-mix(in srgb,var(--seal) 78%,var(--mixdark))}
+  .hobo-quote{background:color-mix(in srgb,var(--seal) 9%,transparent);border-top-color:color-mix(in srgb,var(--seal) 42%,transparent);color:color-mix(in srgb,var(--seal) 80%,var(--mixdark))}
   .hd-hue{display:inline-flex;align-items:center;gap:5px;margin-top:7px;font-family:var(--sans);font-size:11px;color:var(--ink-soft);letter-spacing:.06em}
   .hd-hue::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--seal);box-shadow:0 1px 2px rgba(80,60,40,.25)}
 
   /* ---- 設定面板 + 提示 toast ---- */
-  #setPane .set-row{border:1px solid var(--line);border-radius:9px;padding:13px 15px;margin-bottom:12px;background:#fffdf7}
+  #setPane .set-row{border:1px solid var(--line);border-radius:9px;padding:13px 15px;margin-bottom:12px;background:var(--surface)}
   .set-h{font-family:var(--kai);font-size:15px;color:var(--ink);letter-spacing:.08em;margin-bottom:5px}
   .set-d{font-size:12.5px;color:var(--ink-soft);line-height:1.7;margin-bottom:10px}
   .set-d b{color:var(--seal);font-weight:400}
@@ -402,7 +408,38 @@
   .set-last{font-size:12px;color:var(--gold);margin-top:9px;letter-spacing:.04em}
   .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(8px);background:#544c44;color:#fff;font-size:13.5px;padding:10px 18px;border-radius:22px;box-shadow:0 6px 20px rgba(0,0,0,.3);z-index:60;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;font-family:var(--sans);letter-spacing:.04em;max-width:90vw;text-align:center}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ---- 外觀主題：宣紙 / 夜間（只覆寫變數；--seal 月色不動，照樣每月換色） ---- */
+  html.theme-xuan{
+    --paper0:#fbf7ed; --paper:#f6efe1; --paper2:#efe6d4; --card:#fdfaf2;
+    --ink:#3f382e; --ink-soft:#857a68; --ink2:#342f25; --line:#e6dcc7;
+    --surface:#fffdf6; --sheet:#f8f3e7; --mixdark:#2a2018;
+    --moon-lit:#b3a890; --moon-edge:rgba(70,60,48,.42);
+  }
+  html.theme-xuan .book-left{background:linear-gradient(90deg,#fbf6ea,var(--card) 78%,#f1e8d6)}
+  html.theme-xuan .book-right{background:linear-gradient(270deg,#fbf6ea,var(--card) 78%,#f1e8d6)}
+
+  html.theme-night{
+    --paper0:#24211d; --paper:#1e1b18; --paper2:#161412; --card:#2a2622;
+    --ink:#e7dfd0; --ink-soft:#a89e8c; --ink2:#d6cdbd; --line:#463f37;
+    --surface:#322d28; --sheet:#262220; --gold:#c1a978; --mixdark:#efe7d8;
+    --moon-lit:#dcd5c4; --moon-dark:rgba(0,0,0,.22); --moon-edge:rgba(220,212,196,.45);
+  }
+  html.theme-night .card,html.theme-night .diary,html.theme-night .modal{box-shadow:0 10px 30px -16px rgba(0,0,0,.7)}
+  html.theme-night .book-left{background:linear-gradient(90deg,#332e27,var(--card) 78%,#211e1a)}
+  html.theme-night .book-right{background:linear-gradient(270deg,#332e27,var(--card) 78%,#211e1a)}
+  /* 手帳＝紙感計畫頁：夜間維持淺色（於 .hobo 子樹重新宣告莫蘭迪變數），手寫墨色才看得見、原文才讀得到 */
+  html.theme-night .hobo{
+    --card:#efeae2; --surface:#fffdf7; --sheet:#f4f0e7; --line:#cec5b6;
+    --ink:#4b453e; --ink-soft:#8c8377; --ink2:#3f3a31; --gold:#a99a78; --mixdark:#231e1b;
+    --moon-lit:#a59b89; --moon-dark:rgba(120,108,92,.10); --moon-edge:rgba(75,69,62,.4);
+  }
+
+  /* 主題選擇鈕（設定面板） */
+  #themeBtns button{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+  #themeBtns button.active{background:var(--seal);color:#fff;border-color:var(--seal)}
 </style>
+<script>try{var _t=localStorage.getItem("gx_theme");if(_t==="xuan"||_t==="night")document.documentElement.className="theme-"+_t;}catch(e){}</script>
 </head>
 <body>
 <div class="wrap">
@@ -530,6 +567,7 @@
           <div>
             <div class="hd-mon" id="hbMon">—</div>
             <div class="hd-wd" id="hbWd">—</div>
+            <div class="hd-lunar" id="hbLunar">—</div>
             <div class="hd-extra" id="hbExtra">—</div>
             <div class="hd-hue" id="hbHue"></div>
           </div>
@@ -589,11 +627,32 @@
     </div>
     <div id="setPane" style="display:none">
       <div class="set-row">
+        <div class="set-h">外觀主題</div>
+        <div class="set-d">選一個閱讀背景；<b>夜間</b>護眼適合晚上、<b>宣紙</b>較明亮溫潤。每月主色仍依月份變化；手帳頁維持紙感、不變深。</div>
+        <div class="set-line" id="themeBtns">
+          <button data-theme="morandi">莫蘭迪</button>
+          <button data-theme="xuan">宣紙</button>
+          <button data-theme="night">夜間</button>
+        </div>
+      </div>
+      <div class="set-row">
         <div class="set-h">雲端同步（電腦 · Android · iPad 共用）</div>
         <div class="set-d" id="syncDesc">用 Google 帳號登入，三台裝置自動同步同一份日記、手寫、手帳。資料鎖在你的帳號，只有你看得到。</div>
         <div class="set-line">
           <button id="syncBtn" disabled>雲端同步（尚未設定）</button>
           <span class="set-last" id="syncStatus" style="margin:0"></span>
+        </div>
+      </div>
+      <div class="set-row">
+        <div class="set-h">朗讀</div>
+        <div class="set-d">調整「🔊 朗讀原文」的語速與聲音。聲音清單由系統／瀏覽器提供，數量因裝置而異。</div>
+        <div class="set-line">語速
+          <input type="range" id="ttsRate" min="0.5" max="1.3" step="0.05" style="flex:1;min-width:110px;accent-color:var(--seal)">
+          <span class="set-last" id="ttsRateVal" style="margin:0">0.85×</span>
+        </div>
+        <div class="set-line">聲音
+          <select id="ttsVoice" style="flex:1;min-width:140px"><option value="">系統預設</option></select>
+          <button id="ttsTest">試聽</button>
         </div>
       </div>
       <div class="set-row">
@@ -1011,16 +1070,90 @@ const MONTH_HUE=[
   ["#a06f5b","磚紅"],["#8e7762","霧棕"],["#94707d","玫紫"],["#6f7088","靛灰"]
 ];
 function applyMonthColor(d){document.documentElement.style.setProperty("--seal",MONTH_HUE[d.getMonth()][0]);}
-const MOON_GLYPH=["🌑","🌒","🌓","🌔","🌕","🌖","🌗","🌘"];
 const MOON_NAME=["朔","蛾眉","上弦","盈凸","望","虧凸","下弦","殘"];
+const LUNAR_CYCLE=29.53058867;
 function dayOfYear(d){return Math.round((startOfDay(d)-new Date(d.getFullYear(),0,0))/DAY);}
-function moonInfo(d){
-  const lunar=29.53058867, dayMs=86400000;
-  const known=Date.UTC(2000,0,6,18,14,0)/dayMs;
+function moonAge(d){
+  const dayMs=86400000, known=Date.UTC(2000,0,6,18,14,0)/dayMs;
   const now=Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/dayMs;
-  let age=(now-known)%lunar; if(age<0)age+=lunar;
-  const idx=Math.floor(age/lunar*8+0.5)%8;
-  return {glyph:MOON_GLYPH[idx],name:MOON_NAME[idx]};
+  let age=(now-known)%LUNAR_CYCLE; if(age<0)age+=LUNAR_CYCLE; return age;
+}
+function moonInfo(d){
+  const age=moonAge(d), idx=Math.floor(age/LUNAR_CYCLE*8+0.5)%8;
+  return {name:MOON_NAME[idx], age};
+}
+// 灰階莫蘭迪月相：用多邊形描出明暗界線（終止線＝半橢圓），避開 SVG 弧線 sweep 旗標歧義
+function moonSVG(age){
+  const p=age/LUNAR_CYCLE, r=13, cx=15, cy=15, N=22;
+  const wane=p>=0.5, pp=wane?1-p:p, tr=r*Math.cos(2*Math.PI*pp), pts=[];
+  for(let i=0;i<=N;i++){const t=Math.PI*i/N; pts.push([cx+r*Math.sin(t), cy-r*Math.cos(t)]);}
+  for(let i=N;i>=0;i--){const t=Math.PI*i/N; pts.push([cx+tr*Math.sin(t), cy-r*Math.cos(t)]);}
+  const P=wane?pts.map(q=>[2*cx-q[0],q[1]]):pts;
+  const path=P.map((q,i)=>(i?"L":"M")+q[0].toFixed(1)+","+q[1].toFixed(1)).join(" ")+"Z";
+  return `<svg class="moonsvg" viewBox="0 0 30 30" width="15" height="15" aria-hidden="true"><circle cx="${cx}" cy="${cy}" r="${r}" fill="var(--moon-dark)" stroke="var(--moon-edge)" stroke-width="1"/><path d="${path}" fill="var(--moon-lit)"/></svg>`;
+}
+
+/* ---------- 農曆（lunarInfo 1900-2100，jjonline 通用表）＋ 節氣（壽星公式，2000-2099 準確） ---------- */
+const lunarInfo=[
+0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,
+0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,
+0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,
+0x06566,0x0d4a0,0x0ea50,0x16a95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950,
+0x0d4a0,0x1d8a6,0x0b550,0x056a0,0x1a5b4,0x025d0,0x092d0,0x0d2b2,0x0a950,0x0b557,
+0x06ca0,0x0b550,0x15355,0x04da0,0x0a5b0,0x14573,0x052b0,0x0a9a8,0x0e950,0x06aa0,
+0x0aea6,0x0ab50,0x04b60,0x0aae4,0x0a570,0x05260,0x0f263,0x0d950,0x05b57,0x056a0,
+0x096d0,0x04dd5,0x04ad0,0x0a4d0,0x0d4d4,0x0d250,0x0d558,0x0b540,0x0b6a0,0x195a6,
+0x095b0,0x049b0,0x0a974,0x0a4b0,0x0b27a,0x06a50,0x06d40,0x0af46,0x0ab60,0x09570,
+0x04af5,0x04970,0x064b0,0x074a3,0x0ea50,0x06b58,0x05ac0,0x0ab60,0x096d5,0x092e0,
+0x0c960,0x0d954,0x0d4a0,0x0da50,0x07552,0x056a0,0x0abb7,0x025d0,0x092d0,0x0cab5,
+0x0a950,0x0b4a0,0x0baa4,0x0ad50,0x055d9,0x04ba0,0x0a5b0,0x15176,0x052b0,0x0a930,
+0x07954,0x06aa0,0x0ad50,0x05b52,0x04b60,0x0a6e6,0x0a4e0,0x0d260,0x0ea65,0x0d530,
+0x05aa0,0x076a3,0x096d0,0x04afb,0x04ad0,0x0a4d0,0x1d0b6,0x0d250,0x0d520,0x0dd45,
+0x0b5a0,0x056d0,0x055b2,0x049b0,0x0a577,0x0a4b0,0x0aa50,0x1b255,0x06d20,0x0ada0,
+0x14b63,0x09370,0x049f8,0x04970,0x064b0,0x168a6,0x0ea50,0x06b20,0x1a6c4,0x0aae0,
+0x092e0,0x0d2e3,0x0c960,0x0d557,0x0d4a0,0x0da50,0x05d55,0x056a0,0x0a6d0,0x055d4,
+0x052d0,0x0a9b8,0x0a950,0x0b4a0,0x0b6a6,0x0ad50,0x055a0,0x0aba4,0x0a5b0,0x052b0,
+0x0b273,0x06930,0x07337,0x06aa0,0x0ad50,0x14b55,0x04b60,0x0a570,0x054e4,0x0d160,
+0x0e968,0x0d520,0x0daa0,0x16aa6,0x056d0,0x04ae0,0x0a9d4,0x0a2d0,0x0d150,0x0f252,
+0x0d520];
+const SOLAR_TERM=["小寒","大寒","立春","雨水","驚蟄","春分","清明","穀雨","立夏","小滿","芒種","夏至","小暑","大暑","立秋","處暑","白露","秋分","寒露","霜降","立冬","小雪","大雪","冬至"];
+const TERM_C=[5.4055,20.12,3.87,18.73,5.63,20.646,4.81,20.1,5.52,21.04,5.678,21.37,7.108,22.83,7.5,23.13,7.646,23.042,8.318,23.438,7.438,22.36,7.18,21.94];
+function getTerm(y,n){const Y=y-2000;return Math.floor(Y*0.2422+TERM_C[n-1])-Math.floor(Y/4);} // n:1..24，傳回該節氣在當月的日
+function lLeapMonth(y){return lunarInfo[y-1900]&0xf;}
+function lLeapDays(y){return lLeapMonth(y)?((lunarInfo[y-1900]&0x10000)?30:29):0;}
+function lMonthDays(y,m){return (lunarInfo[y-1900]&(0x10000>>m))?30:29;}
+function lYearDays(y){let s=348;for(let i=0x8000;i>0x8;i>>=1)s+=(lunarInfo[y-1900]&i)?1:0;return s+lLeapDays(y);}
+function solar2lunar(y,m,dd){
+  if(y<1900||y>2100)return null;
+  let offset=Math.round((Date.UTC(y,m-1,dd)-Date.UTC(1900,0,31))/86400000), temp=0, i;
+  for(i=1900;i<2101&&offset>0;i++){temp=lYearDays(i);offset-=temp;}
+  if(offset<0){offset+=temp;i--;}
+  const lYear=i; let leap=lLeapMonth(i), isLeap=false, j;
+  for(j=1;j<13&&offset>0;j++){
+    if(leap>0&&j===leap+1&&!isLeap){--j;isLeap=true;temp=lLeapDays(i);}
+    else{temp=lMonthDays(i,j);}
+    if(isLeap&&j===leap+1)isLeap=false;
+    offset-=temp;
+  }
+  if(offset===0&&leap>0&&j===leap+1){if(isLeap)isLeap=false;else{isLeap=true;--j;}}
+  if(offset<0){offset+=temp;--j;}
+  return {lYear,lMonth:j,lDay:offset+1,isLeap};
+}
+const L_MON=["正","二","三","四","五","六","七","八","九","十","冬","臘"];
+const L_DAY1=["日","一","二","三","四","五","六","七","八","九"];
+function lunarMonthName(m,isLeap){return (isLeap?"閏":"")+L_MON[m-1]+"月";}
+function lunarDayName(d){
+  if(d===10)return "初十"; if(d===20)return "二十"; if(d===30)return "三十";
+  return ["初","十","廿","卅"][Math.floor(d/10)]+L_DAY1[d%10];
+}
+function lunarStr(d){const o=solar2lunar(d.getFullYear(),d.getMonth()+1,d.getDate());return o?lunarMonthName(o.lMonth,o.isLeap)+lunarDayName(o.lDay):"";}
+function currentTerm(d){ // 當前所在（或當日交）的節氣
+  const y=d.getFullYear(), m=d.getMonth()+1, day=d.getDate();
+  const d1=getTerm(y,2*m-1), d2=getTerm(y,2*m);
+  if(day>=d2)return {name:SOLAR_TERM[2*m-1],on:day===d2};
+  if(day>=d1)return {name:SOLAR_TERM[2*m-2],on:day===d1};
+  let pm=m-1, py=y; if(pm<1){pm=12;py--;}
+  return {name:SOLAR_TERM[2*pm-1],on:false};
 }
 function hasContent(d){const k=keyOf(d),t=localStorage.getItem("diary:"+k);
   return !!((t&&t.trim())||localStorage.getItem("gx_canvas:"+k)||localStorage.getItem("gx_hobo:"+k));}
@@ -1119,13 +1252,18 @@ function saveEntry(){
   updateStreak();
 }
 
-/* ---------- 朗讀 ---------- */
-$("speak").addEventListener("click",()=>{
+/* ---------- 朗讀（語速／語音於設定面板調整，存 gx_ttsrate / gx_ttsvoice） ---------- */
+function speakText(t){
   if(!("speechSynthesis" in window)){alert("此瀏覽器不支援朗讀功能。");return;}
   speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance((viewItem?viewItem.text:"").replace(/\n/g,"，"));
-  u.lang="zh-TW"; u.rate=.85; speechSynthesis.speak(u);
-});
+  const u=new SpeechSynthesisUtterance((t||"").replace(/\n/g,"，"));
+  u.lang="zh-TW";
+  u.rate=parseFloat(localStorage.getItem("gx_ttsrate")||"0.85")||0.85;
+  const vu=localStorage.getItem("gx_ttsvoice");
+  if(vu){const v=(speechSynthesis.getVoices()||[]).find(x=>x.voiceURI===vu); if(v)u.voice=v;}
+  speechSynthesis.speak(u);
+}
+$("speak").addEventListener("click",()=>speakText(viewItem?viewItem.text:""));
 
 /* ---------- 導覽（鍵盤左右翻頁） ---------- */
 $("prev").onclick=()=>{current=new Date(current.getTime()-DAY);refresh();};
@@ -1282,6 +1420,9 @@ function updateBackupInfo(){
   if($("abLast")) $("abLast").textContent = last? ("上次備份："+last) : "尚未自動備份";
 }
 function buildSet(){
+  document.querySelectorAll("#themeBtns button").forEach(b=>b.classList.toggle("active",b.dataset.theme===(localStorage.getItem("gx_theme")||"morandi")));
+  if($("ttsRate")){const r=localStorage.getItem("gx_ttsrate")||"0.85";$("ttsRate").value=r;$("ttsRateVal").textContent=parseFloat(r).toFixed(2)+"×";}
+  populateVoices();
   $("abEnable").checked = localStorage.getItem("gx_autobackup")!=="off";
   $("abInterval").value = localStorage.getItem("gx_backupinterval")||"7";
   updateBackupInfo();
@@ -1458,11 +1599,12 @@ function renderHobo(){
   const rd=getSet("gx_read"), id=pid(cat,item);
   if(!rd.has(id)){rd.add(id);putSet("gx_read",rd);}
   $("progress").innerHTML=`已讀 <b>${getSet("gx_read").size}</b> ／ 共 ${TOTAL} 篇`;
-  const wd=current.getDay(), mi=moonInfo(current);
+  const wd=current.getDay(), mi=moonInfo(current), term=currentTerm(current);
   $("hbDay").textContent=current.getDate();
   $("hbMon").textContent=EN_MON[current.getMonth()];
   $("hbWd").textContent=`${EN_WD[wd]} · ${WD_CH[wd]}`;
-  $("hbExtra").innerHTML=`一年第 ${dayOfYear(current)} 天　<span class="moon">${mi.glyph}</span>${mi.name}`;
+  $("hbLunar").innerHTML=`農曆${lunarStr(current)}　·　<span class="jq${term.on?" on":""}">${term.on?"今日交"+term.name:term.name}</span>`;
+  $("hbExtra").innerHTML=`一年第 ${dayOfYear(current)} 天　<span class="moon">${moonSVG(mi.age)}</span>${mi.name}`;
   $("hbHue").textContent=`${MONTH_HUE[current.getMonth()][1]} · ${current.getMonth()+1}月之色`;
   $("hbCat").textContent=label;
   $("hbMeta").textContent=`${item.dynasty}　${item.author}〈${item.title}〉`;
@@ -1599,12 +1741,7 @@ function renderBook(){
   $("next").disabled=false;
   updateStreak();
 }
-$("bkSpeak").addEventListener("click",()=>{
-  if(!("speechSynthesis" in window)){alert("此瀏覽器不支援朗讀功能。");return;}
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance((viewItem?viewItem.text:"").replace(/\n/g,"，"));
-  u.lang="zh-TW"; u.rate=.85; speechSynthesis.speak(u);
-});
+$("bkSpeak").addEventListener("click",()=>speakText(viewItem?viewItem.text:""));
 $("bkStar").onclick=()=>{
   if(!viewItem)return;
   const s=getSet("gx_marks"), id=pid(viewCat,viewItem);
@@ -1627,6 +1764,32 @@ $("vClassic").onclick=()=>setView("classic");
 $("vBook").onclick=()=>setView("book");
 $("vHobo").onclick=()=>setView("hobo");
 
+/* ---------- 外觀主題（gx_theme；--seal 月色不受影響） ---------- */
+const THEME_META={morandi:"#a07a6f", xuan:"#c8a98f", night:"#1e1b18"};
+function applyTheme(t){
+  if(!THEME_META[t])t="morandi";
+  document.documentElement.classList.remove("theme-xuan","theme-night");
+  if(t!=="morandi")document.documentElement.classList.add("theme-"+t);
+  localStorage.setItem("gx_theme",t);
+  const meta=document.querySelector('meta[name="theme-color"]'); if(meta)meta.content=THEME_META[t];
+  document.querySelectorAll("#themeBtns button").forEach(b=>b.classList.toggle("active",b.dataset.theme===t));
+}
+document.querySelectorAll("#themeBtns button").forEach(b=>b.onclick=()=>applyTheme(b.dataset.theme));
+
+/* ---------- 朗讀設定 ---------- */
+function populateVoices(){
+  if(!("speechSynthesis" in window)||!$("ttsVoice"))return;
+  const cur=localStorage.getItem("gx_ttsvoice")||"";
+  const voices=(speechSynthesis.getVoices()||[]).filter(v=>/zh|cmn|yue|Chinese|Hant|Hans/i.test(v.lang)||/中文|國語|普通话|普通話|粤|粵|台/.test(v.name));
+  $("ttsVoice").innerHTML='<option value="">系統預設</option>'+voices.map(v=>`<option value="${v.voiceURI}">${v.name}（${v.lang}）</option>`).join("");
+  $("ttsVoice").value=cur;
+}
+if("speechSynthesis" in window) speechSynthesis.addEventListener("voiceschanged",populateVoices);
+if($("ttsRate")) $("ttsRate").oninput=()=>{const v=parseFloat($("ttsRate").value);localStorage.setItem("gx_ttsrate",String(v));$("ttsRateVal").textContent=v.toFixed(2)+"×";};
+if($("ttsVoice")) $("ttsVoice").onchange=()=>localStorage.setItem("gx_ttsvoice",$("ttsVoice").value);
+if($("ttsTest")) $("ttsTest").onclick=()=>speakText("江南可採蓮，蓮葉何田田。魚戲蓮葉間。");
+
+applyTheme(localStorage.getItem("gx_theme")||"morandi");
 setDiaryMode(diaryMode==="draw");
 setHoboMode(hoboMode==="draw");
 applyView();

@@ -1,5 +1,28 @@
 # 開發日誌 · DEVLOG
 
+## 2026-06-13 — Session 11：四項精修（主題切換 + 月相 SVG + 朗讀設定 + 節氣農曆）
+
+接已上線開源版（commit d0e5177）做四項精修，全在 `index.html` 單檔。
+
+### 做了什麼
+1. **外觀主題（莫蘭迪 / 宣紙 / 夜間）**：寫死色抽成 CSS 變數（`--paper0/--surface/--sheet/--ink2/--mixdark/--moon-*`），預設值不變→莫蘭迪像素一致。主題 class 掛在 `<html>`（`html.theme-xuan/.theme-night` 覆寫變數），加 `<head>` 前置 script 依 `gx_theme` 在繪製前先掛 class（**防夜間載入白閃**）。設定面板三鈕，`applyTheme()` 同步 `<meta theme-color>`。**`--seal` 月色不覆寫**＝三主題都照樣每月換色。**關鍵設計：夜間時手帳頁於 `.hobo` 子樹重新宣告莫蘭迪（淺）變數**→計畫頁維持紙感、手寫墨色看得見、原文讀得到（一條 rule 解決，免幾十條覆寫）。手寫畫布 `#diarypad` 固定淺紙不隨主題（墨色永遠可見）。
+2. **月相改灰階 SVG**：`moonInfo` 改算真實相位 age/fraction；`moonSVG(age)` 用**多邊形描終止線**（明亮緣半圓＋終止線半橢圓 `rx=r·cos(2π·phase)`，盈右虧左用水平鏡射），避開 SVG 弧線 sweep 旗標歧義。灰階莫蘭迪，lit/dark/edge 用變數隨主題。取代原 emoji。
+3. **朗讀語速 / 語音選擇**：兩處 speak handler 併成 `speakText(t)`，讀 `gx_ttsrate`（預設 0.85）/`gx_ttsvoice`。設定加語速滑桿（即時標籤）＋中文語音 select（`getVoices` 過濾 zh/cmn/中文…＋`onvoiceschanged` 補填）＋試聽鈕。
+4. **節氣 / 農曆**：手帳日期區塊加「農曆◯月◯ · 節氣」。農曆用 jjonline 通用 `lunarInfo`(1900-2100) 表＋標準 `solar2lunar`（閏月 isLeap 處理）；節氣用壽星公式（2000-2099 準）`currentTerm` 給當前所在／當日交的節氣。
+
+### 驗證（無頭瀏覽器；本環境 screenshot 仍逾時，全靠 computed style + DOM + 演算法 eval）
+- **農曆/節氣對權威值**：今日 2026-06-13 → DOM 實渲染 `農曆四月廿八　·　芒種`（對 bmcx/8s8s 萬年曆）；春節 2024/25/26/27 皆落正月初一；1900-01-31 基準＝正月初一；閏 2025=6、2033=11；芒種6/5・夏至6/21・清明4/5・立春2/4 皆符。
+- **月相**：8 相 lit% 0→15→50→85→100→85→50→15、盈右虧左（多邊形質心 x 驗）。
+- **主題**：三主題切換＋持久化＋meta 色；夜間全域深、`.hobo` 子樹 card `#efeae2`/ink `#4b453e`/sheet `#f4f0e7`（紙感）；莫蘭迪重置回原值像素一致。
+- **朗讀**：語速存讀＋標籤即時、6 個中文語音（含 Microsoft Hanhan zh-TW）過濾、選取持久化。
+- console 僅 Firebase deprecation warning，零錯誤；inline JS `new Function` 語法檢查過。
+
+### 現狀
+- 四項全上，仍單檔。新 localStorage keys：`gx_theme`/`gx_ttsrate`/`gx_ttsvoice` ——屬**裝置偏好**，不在 Firebase 同步清單（`SYNC_KEY`/`SYNC_PREFIX`，line 1810）→各裝置自己的（夜間可只設手機、語音各機不同），正確。
+- 待 commit（v3.6）。
+
+---
+
 ## 2026-06-13 — Session 10：上線 + 三裝置雲端同步 + 改名 + 開源自架（部署實戰）
 
 把 app 從「本機 + 同步骨架」真正推上線、接通雲端、開源。**全程陪使用者一步步點 GitHub / Firebase 主控台**（非技術使用者，靠截圖來回對照）。
