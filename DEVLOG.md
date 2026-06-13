@@ -1,5 +1,29 @@
 # 開發日誌 · DEVLOG
 
+## 2026-06-13 — Session 9：Firebase 雲端同步（三裝置共用）骨架
+
+### 做了什麼
+- 需求：Android／iPad／電腦共用同一份資料 → 選 Firebase 雲端同步（Firestore + Google 登入）。
+- 設定面板加「雲端同步」區（登入鈕 + 狀態）。新增 `<script type="module">` 同步層（用 gstatic CDN 動態 import firebase 10.13.2 app/auth/firestore）。
+- 同步機制：**monkeypatch `localStorage.setItem/removeItem`** → 寫到 Firestore `users/{uid}/kv/{keyToId}`（debounce 1.2s 合併連續寫，省額度）；`onSnapshot` 監聽遠端 → 套回本機 + `window.refresh()`；`initialMerge`（遠端為準 + 本機獨有鍵推上雲）；Google signInWithPopup/signOut。
+- **同步哪些**：`diary:` / `gx_canvas:` / `gx_hobo:` 前綴 + `gx_ink/gx_anno/gx_marks/gx_read/gx_start`。裝置本地偏好（font/view/diarymode/hobomode/autobackup/lastbackup）**不同步**（各裝置自己的）。
+- **防呆**：`firebaseConfig` 留空 → 整段不啟用、app 照常本機跑；`file://` → 不啟用（Firebase Auth 不支援 file:// origin）→ 提示用網頁版。避免迴圈：套遠端時用 raw set + `applying` 旗標。
+
+### 驗證
+- 無頭瀏覽器（config 空）：app 正常、設定顯示「雲端同步（尚未設定）」鈕 disabled、localStorage 未被攔截照常、零 console 錯誤。
+- Firebase 實際同步待使用者建專案給 config 後上線測。
+
+### 待使用者做（只有他能做；本機無 gh/firebase CLI）
+1. GitHub repo 改 public + 開 Pages（拿 https 網址）。
+2. Firebase console 建專案 → 加 Web app 拿 firebaseConfig → 啟用 Google 登入 → 建 Firestore → 貼安全規則(只允許 uid==auth.uid) → Authorized domains 加 Pages 網域。
+3. 把 firebaseConfig 給我貼進去 commit。
+- **重點**：file:// 桌面版無法登入 → 三台都改用 https PWA 才能共用同一份。firebaseConfig 不是機密(可進公開 repo)，安全靠規則+登入。
+
+### 現狀
+- 同步骨架已 push（inert，等 config）。repo 待 commit（v3.4）。
+
+---
+
 ## 2026-06-13 — Session 8：自動開啟設定工具（Windows 排程 GUI）
 
 ### 做了什麼

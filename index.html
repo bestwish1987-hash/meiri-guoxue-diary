@@ -589,6 +589,14 @@
     </div>
     <div id="setPane" style="display:none">
       <div class="set-row">
+        <div class="set-h">雲端同步（電腦 · Android · iPad 共用）</div>
+        <div class="set-d" id="syncDesc">用 Google 帳號登入，三台裝置自動同步同一份日記、手寫、手帳。資料鎖在你的帳號，只有你看得到。</div>
+        <div class="set-line">
+          <button id="syncBtn" disabled>雲端同步（尚未設定）</button>
+          <span class="set-last" id="syncStatus" style="margin:0"></span>
+        </div>
+      </div>
+      <div class="set-row">
         <div class="set-h">每週自動備份</div>
         <div class="set-d">每隔一段時間自動把日記、手寫、手帳匯出成一個 JSON 檔（存到「下載」資料夾），萬一清掉瀏覽器資料也救得回來。</div>
         <label class="set-toggle"><input type="checkbox" id="abEnable"><span>啟用自動備份</span></label>
@@ -1623,6 +1631,72 @@ setDiaryMode(diaryMode==="draw");
 setHoboMode(hoboMode==="draw");
 applyView();
 maybeAutoBackup();
+</script>
+<script type="module">
+/* ---------- 雲端同步（Firebase；填入 firebaseConfig 後啟用，三裝置共用） ---------- */
+const firebaseConfig = {
+  /* ↓↓↓ 貼上你 Firebase 專案的「Web app」設定（Project settings → Your apps）↓↓↓
+  apiKey: "...",
+  authDomain: "你的專案.firebaseapp.com",
+  projectId: "你的專案id",
+  appId: "..."
+  ↑↑↑ 留空＝雲端同步停用，app 照常本機運作 */
+};
+const SYNC_PREFIX=["diary:","gx_canvas:","gx_hobo:"], SYNC_KEY=["gx_ink","gx_anno","gx_marks","gx_read","gx_start"];
+const isSynced=k=>SYNC_KEY.includes(k)||SYNC_PREFIX.some(p=>k.startsWith(p));
+const keyToId=k=>k.replace(/[:/]/g,"__");
+const g=id=>document.getElementById(id);
+const setStat=t=>{const e=g("syncStatus");if(e)e.textContent=t;};
+
+if(!firebaseConfig.apiKey){
+  if(g("syncBtn")){g("syncBtn").disabled=true;g("syncBtn").textContent="雲端同步（尚未設定）";}
+}else if(!location.protocol.startsWith("http")){
+  if(g("syncBtn")){g("syncBtn").disabled=true;g("syncBtn").textContent="雲端同步";}
+  setStat("請用網頁版（https）登入才能同步");
+}else{
+  try{
+    const V="https://www.gstatic.com/firebasejs/10.13.2";
+    const {initializeApp}=await import(`${V}/firebase-app.js`);
+    const {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged}=await import(`${V}/firebase-auth.js`);
+    const {getFirestore,collection,doc,setDoc,deleteDoc,getDocs,onSnapshot,enableIndexedDbPersistence}=await import(`${V}/firebase-firestore.js`);
+    const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getFirestore(app);
+    enableIndexedDbPersistence(db).catch(()=>{});
+    const rawSet=localStorage.setItem.bind(localStorage), rawRemove=localStorage.removeItem.bind(localStorage);
+    let uid=null, applying=false, unsub=null; const timers={};
+    localStorage.setItem=(k,v)=>{rawSet(k,v);if(uid&&!applying&&isSynced(k))push(k,v);};
+    localStorage.removeItem=(k)=>{rawRemove(k);if(uid&&!applying&&isSynced(k)){clearTimeout(timers[k]);deleteDoc(doc(db,`users/${uid}/kv/${keyToId(k)}`)).catch(()=>{});}};
+    function push(k,v){clearTimeout(timers[k]);timers[k]=setTimeout(()=>{setDoc(doc(db,`users/${uid}/kv/${keyToId(k)}`),{k,v,t:Date.now()}).catch(()=>{});},1200);}
+    const btn=g("syncBtn"); btn.disabled=false;
+    btn.onclick=()=>{ if(uid)signOut(auth); else signInWithPopup(auth,new GoogleAuthProvider()).catch(e=>setStat("登入失敗："+(e.code||e.message))); };
+    onAuthStateChanged(auth, async user=>{
+      uid=user?user.uid:null;
+      if(user){
+        btn.textContent="登出雲端同步"; setStat("同步中…");
+        await initialMerge(); listen(); setStat("已同步 ✓ "+(user.email||""));
+      }else{
+        if(unsub){unsub();unsub=null;}
+        btn.textContent="用 Google 登入同步"; setStat("未登入（此裝置資料仍在本機）");
+      }
+    });
+    async function initialMerge(){
+      const snap=await getDocs(collection(db,`users/${uid}/kv`)); const remote={};
+      snap.forEach(d=>{const x=d.data();remote[x.k]=x.v;});
+      applying=true; Object.entries(remote).forEach(([k,v])=>rawSet(k,v)); applying=false;
+      const locals=[]; for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(isSynced(k))locals.push(k);}
+      locals.forEach(k=>{if(!(k in remote))push(k,localStorage.getItem(k));});
+      if(window.refresh)window.refresh();
+    }
+    function listen(){
+      unsub=onSnapshot(collection(db,`users/${uid}/kv`),snap=>{
+        let changed=false; applying=true;
+        snap.docChanges().forEach(ch=>{const x=ch.doc.data();
+          if(ch.type==="removed"){if(localStorage.getItem(x.k)!=null){rawRemove(x.k);changed=true;}}
+          else if(localStorage.getItem(x.k)!==x.v){rawSet(x.k,x.v);changed=true;}});
+        applying=false; if(changed&&window.refresh)window.refresh();
+      });
+    }
+  }catch(e){console.warn("雲端同步初始化失敗",e);setStat("同步載入失敗（離線？）");}
+}
 </script>
 <script>if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}</script>
 </body>
