@@ -1633,7 +1633,9 @@ applyView();
 maybeAutoBackup();
 </script>
 <script type="module">
-/* ---------- 雲端同步（Firebase；填入 firebaseConfig 後啟用，三裝置共用） ---------- */
+/* ---------- 雲端同步（Firebase；多裝置共用） ----------
+   自己架一份：把下面 firebaseConfig 換成「你自己的」Firebase 專案設定（見 README「自己架一份」）。
+   留空 {} ＝停用雲端同步、純本機運作。firebaseConfig 非機密，放公開程式碼正常（安全靠 Firestore 規則＋登入）。 */
 const firebaseConfig = {
   apiKey: "AIzaSyBlf_m7wK9P9y-12VPAu_it_k2kT-tUKxQ",
   authDomain: "meiri-guoxue.firebaseapp.com",
