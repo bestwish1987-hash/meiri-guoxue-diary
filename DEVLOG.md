@@ -1,5 +1,34 @@
 # 開發日誌 · DEVLOG
 
+## 2026-06-13 — Session 10：上線 + 三裝置雲端同步 + 改名 + 開源自架（部署實戰）
+
+把 app 從「本機 + 同步骨架」真正推上線、接通雲端、開源。**全程陪使用者一步步點 GitHub / Firebase 主控台**（非技術使用者，靠截圖來回對照）。
+
+### 做了什麼（時序）
+1. **PWA 上線**：陪使用者 repo 改 public（Settings→Danger Zone→Change visibility，最常卡「沒拉到最底」）→ 開 GitHub Pages。**坑**：Pages 的 Branch 預設 `None`＝disabled，要**手動選 `main` /`(root)` 再 Save** 才會 build（不是選 Source 就好）；首次 build 約 1–3 分。網址 **https://bestwish1987-hash.github.io/meiri-guoxue-diary/**（curl 驗 200＋title＋manifest/sw/icon 全 200）。背景用 `run_in_background` 輪詢 curl 直到 200 通知。
+2. **Firebase 全套設定**（陪點 console）：建專案 `meiri-guoxue`(Spark 免費) → 加 Web app 拿 `firebaseConfig` → Authentication 啟用 Google（公開名稱設「日日。文學」）→ Settings→Authorized domains 加 `bestwish1987-hash.github.io` → Firestore 建（Standard/Production/asia-east1）→ Rules 貼 `allow read,write: if request.auth.uid==uid` 發布。
+3. **接 config + 同步運作**（commit a4def18）：firebaseConfig 填進 module，localhost 先驗 SDK 載入＋按鈕就緒。電腦(https PWA)+Android 都登入「**已同步 ✓ bestwish1987@gmail.com**」。
+4. **手機登入修正**（commit 9e633cb）：`signInWithPopup` 在行動裝置常失敗 → `isMobile`（含 **iPad 偽裝 Mac：`maxTouchPoints>1 && /Mac/`**）改 **`signInWithRedirect`+`getRedirectResult`**；桌面維持 popup＋失敗 fallback redirect。手機重開→登入→成功。
+5. **改名 日日。文學**（aef318f「日日文學」→ e7d43be 加中點「日日。文學」）：title / h1 / manifest name+short_name；icon 維持「學」印章、seal「日新」不動。
+6. **開源自架**（commit 21f66b0）：README 重寫含完整 **self-host 步驟**（fork→開 Pages→建自己的 Firebase→換 config）；**MIT LICENSE**；index.html `firebaseConfig` 上方標註「自架請換成你自己的」。
+
+### 重要決定 / 狀態
+- 使用者**選擇不搬舊資料**：file:// 桌面 app 的舊日記留著不動，三台**從現在開始**寫的才共用（要搬：舊版 JSON 匯出 → 線上版 還原）。
+- **file:// 桌面捷徑不同步**（Firebase auth 不支援 file:// origin）→ 三台都要用 **https PWA**。桌面可在 Chrome 對線上版按「安裝」變同步的桌面 app（取代舊 file:// 捷徑）。
+- 分享策略：一般朋友→傳網址（用使用者的 Firebase，owner 後台看得到，適合熟人、吃免費額度）；要自己掌握/很多人→傳 repo 自架（各自 Firebase，互不相干）。
+
+### 驗證
+- 純 config-inert 與接上後都在 localhost preview 驗（按鈕狀態、零 console 錯誤）；live 用 curl 驗 200/title/manifest/config/redirect 字串。**screenshot 工具本環境逾時**，全程靠 curl + preview_eval + 使用者截圖。
+
+### 現狀（給下一個 session 接手）
+- ✅ 線上版 live、✅ 三裝置雲端同步 live（電腦+Android 已登入；iPad 還沒接）、✅ repo 已開源(MIT)+自架文件。
+- 最新 commit **21f66b0**，`main` 與 origin 乾淨同步，無未推/未提交。
+- **iPad 待接**：Safari 開網址→加入主畫面→設定→Google 登入（同帳號）即同步。
+- 可選待辦：① 舊資料搬上雲 ② 擴 366 篇 ③ PWA 圖示改名需移除重裝 ④ Tauri .exe（需裝 Rust）⑤ GitHub repo About 加描述/線上版網址/topics ⑥ 量大才需 Firebase 升 Blaze。
+- 本機工具（不在 repo）：桌面捷徑「日日。文學」(file:// app)、「日日。文學 · 自動開啟設定」、`auto-open-settings.ps1`(gitignore)。
+
+---
+
 ## 2026-06-13 — Session 9：Firebase 雲端同步（三裝置共用）骨架
 
 ### 做了什麼
