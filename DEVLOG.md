@@ -1,5 +1,23 @@
 # 開發日誌 · DEVLOG
 
+## 2026-06-13 — Session 8：自動開啟設定工具（Windows 排程 GUI）
+
+### 做了什麼
+- 需求：app 內要能選自動開啟時間 / 關閉。但自動開啟＝Windows 排程，網頁無法控制 → 改用桌面小工具。
+- 把既有排程「每日國學日記」的 action 從 `explorer.exe index.html`（瀏覽器分頁）改成 **`chrome.exe --app=<file URI>`（app 視窗）**，時間維持 20:45。
+- `auto-open-settings.ps1`：WinForms 小對話框（勾選「每天自動開啟」+ 時間 HH:mm 選擇器 + 儲存/取消）。儲存→啟用則 `Register-ScheduledTask -Force`（daily/Interactive/Limited，免 admin），停用則 `Unregister-ScheduledTask`。路徑用 `$PSScriptRoot`/`[Uri].AbsoluteUri`。
+- 桌面＋開始功能表捷徑「每日國學 · 自動開啟設定.lnk」→ `powershell -WindowStyle Hidden -File auto-open-settings.ps1`（**相對檔名＋WorkingDirectory，避免中文路徑在命令列被 ANSI 轉碼**）。
+
+### 驗證
+- `[scriptblock]::Create()` 解析通過；Register/Unregister 在拋棄式 task（_TESTTMP）實測：設 07:30→Ready、Unregister→removed。
+- **坑**：`.ps1` 用 Write 寫成 UTF-8 無 BOM → Windows PowerShell 5.1 當 ANSI 讀→中文亂碼、parse fail。改用 `[IO.File]::WriteAllText(..., UTF8Encoding($true))` 補 BOM 即正常。
+- 註：`.ps1` 為本機工具、加進 `.gitignore` 不上 repo（捷徑 .lnk 在桌面/開始功能表，本就不在 repo）。
+
+### 現狀
+- 桌面有兩個捷徑：「每日國學」(開 app)、「每日國學 · 自動開啟設定」(改時間/關閉)。排程已改成開 app 視窗。
+
+---
+
 ## 2026-06-13 — Session 7：每週自動備份 + 設定面板 + SW 改 network-first
 
 ### 做了什麼

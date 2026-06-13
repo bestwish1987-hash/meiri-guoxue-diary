@@ -6,3 +6,5 @@ desktop.ini
 .vscode/
 *.tmp
 *.bak
+# 本機 Windows 工具（依各自電腦路徑，不上 repo）
+auto-open-settings.ps1
