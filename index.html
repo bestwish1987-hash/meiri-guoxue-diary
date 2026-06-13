@@ -1657,7 +1657,7 @@ if(!firebaseConfig.apiKey){
   try{
     const V="https://www.gstatic.com/firebasejs/10.13.2";
     const {initializeApp}=await import(`${V}/firebase-app.js`);
-    const {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged}=await import(`${V}/firebase-auth.js`);
+    const {getAuth,GoogleAuthProvider,signInWithPopup,signInWithRedirect,getRedirectResult,signOut,onAuthStateChanged}=await import(`${V}/firebase-auth.js`);
     const {getFirestore,collection,doc,setDoc,deleteDoc,getDocs,onSnapshot,enableIndexedDbPersistence}=await import(`${V}/firebase-firestore.js`);
     const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getFirestore(app);
     enableIndexedDbPersistence(db).catch(()=>{});
@@ -1667,7 +1667,14 @@ if(!firebaseConfig.apiKey){
     localStorage.removeItem=(k)=>{rawRemove(k);if(uid&&!applying&&isSynced(k)){clearTimeout(timers[k]);deleteDoc(doc(db,`users/${uid}/kv/${keyToId(k)}`)).catch(()=>{});}};
     function push(k,v){clearTimeout(timers[k]);timers[k]=setTimeout(()=>{setDoc(doc(db,`users/${uid}/kv/${keyToId(k)}`),{k,v,t:Date.now()}).catch(()=>{});},1200);}
     const btn=g("syncBtn"); btn.disabled=false;
-    btn.onclick=()=>{ if(uid)signOut(auth); else signInWithPopup(auth,new GoogleAuthProvider()).catch(e=>setStat("登入失敗："+(e.code||e.message))); };
+    getRedirectResult(auth).catch(e=>setStat("登入失敗："+(e.code||e.message)));
+    const isMobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Mac/.test(navigator.userAgent));
+    btn.onclick=()=>{
+      if(uid){signOut(auth);return;}
+      const prov=new GoogleAuthProvider();
+      if(isMobile){setStat("前往 Google 登入…");signInWithRedirect(auth,prov).catch(e=>setStat("登入失敗："+(e.code||e.message)));}
+      else signInWithPopup(auth,prov).catch(e=>{const c=(e&&e.code)||"";if(c.includes("popup")||c.includes("cancelled"))signInWithRedirect(auth,prov).catch(er=>setStat("登入失敗："+(er.code||er.message)));else setStat("登入失敗："+(c||e.message));});
+    };
     onAuthStateChanged(auth, async user=>{
       uid=user?user.uid:null;
       if(user){
