@@ -238,6 +238,92 @@
   .dtools button:not(.dc).on{border-color:var(--gold);background:#fff}
   #diarypad{width:100%;height:340px;display:block;border:1px solid var(--line);border-radius:8px;cursor:crosshair;touch-action:none;background:repeating-linear-gradient(#fffdf7,#fffdf7 33px,#efe7d4 34px)}
   .histimg{max-width:100%;border:1px solid var(--line);border-radius:6px;margin-top:8px;background:#fffdf7;display:block}
+
+  /* ---- Hobonichi 手帳版面 ---- */
+  .viewtoggle{display:inline-flex;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--card)}
+  .viewtoggle button{font-family:var(--sans);font-size:12.5px;padding:4px 13px;border:none;background:transparent;color:var(--ink-soft);cursor:pointer;letter-spacing:.06em}
+  .viewtoggle button.on{background:var(--seal);color:#fff}
+
+  .hobo{display:none;margin-top:18px}
+  body.hobonichi .card,body.hobonichi .diary{display:none}
+  body.hobonichi .hobo{display:block}
+
+  .hobo-sheet{
+    position:relative;border:1px solid var(--line);border-radius:10px;
+    background-color:#f4f0e7;
+    background-image:radial-gradient(rgba(120,108,92,.30) 1px,transparent 1.5px);
+    background-size:18px 18px;background-position:14px 14px;
+    box-shadow:0 12px 34px -20px rgba(80,60,30,.55);
+    padding:18px 20px 0;overflow:hidden
+  }
+  .hobo-sheet::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(var(--gold),var(--seal));z-index:3}
+
+  /* 頂部：日期區塊 + 迷你月曆 */
+  .hobo-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding-bottom:12px;border-bottom:1.5px solid rgba(160,122,111,.4);margin-bottom:4px}
+  .hobo-date{display:flex;align-items:flex-end;gap:12px}
+  .hd-day{font-family:var(--kai);font-size:54px;line-height:.86;color:var(--ink);font-weight:700}
+  .hd-mon{font-size:16px;letter-spacing:.18em;color:var(--seal);font-weight:700;font-family:var(--sans)}
+  .hd-wd{font-size:13px;color:var(--ink-soft);letter-spacing:.1em;margin-top:2px;font-family:var(--sans)}
+  .hd-extra{font-size:12px;color:var(--ink-soft);margin-top:6px;letter-spacing:.04em;font-family:var(--sans)}
+  .hd-extra .moon{font-size:14px;filter:grayscale(.3);margin-right:3px}
+
+  .hobo-cal{font-family:var(--sans);flex-shrink:0}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
+  .cal-head span{font-size:9.5px;color:var(--ink-soft);text-align:center;padding-bottom:2px}
+  .cal-day{font-size:11px;color:var(--ink);width:20px;height:19px;display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;position:relative}
+  .cal-day:hover{background:rgba(169,154,120,.25)}
+  .cal-day.cur{background:var(--seal);color:#fff}
+  .cal-day.today:not(.cur){box-shadow:inset 0 0 0 1.5px var(--gold)}
+  .cal-day.future{color:#c7bda9;cursor:default}
+  .cal-day.future:hover{background:transparent}
+  .cal-day.dot::after{content:"";position:absolute;bottom:1px;width:3px;height:3px;border-radius:50%;background:var(--gold)}
+  .cal-day.cur.dot::after{background:#fff}
+  .cal-blank{width:20px;height:19px}
+
+  /* 月份側邊 tab */
+  .hobo-tab{position:absolute;right:0;top:150px;display:flex;flex-direction:column;z-index:4}
+  .hobo-tab button{font-family:var(--sans);font-size:10.5px;width:21px;height:20px;border:none;background:rgba(206,197,182,.4);color:var(--ink-soft);cursor:pointer;border-radius:6px 0 0 6px;margin-bottom:2px}
+  .hobo-tab button.on{background:var(--seal);color:#fff}
+  .hobo-tab button:disabled{opacity:.32;cursor:default}
+
+  /* 工具列 + 模式切換 */
+  .hobo-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:7px 0 3px}
+  .hobo-modes{display:inline-flex;gap:5px;margin-right:auto}
+  .hobo-modes button{font-family:var(--sans);font-size:12px;padding:3px 12px;border-radius:13px;border:1px solid var(--line);background:#fffdf7;color:var(--ink-soft);cursor:pointer}
+  .hobo-modes button.on{background:var(--seal);color:#fff;border-color:var(--seal)}
+  .hb-save{font-size:11.5px;color:var(--gold);letter-spacing:.04em}
+  #hbEntry{display:none;width:100%;min-height:260px;resize:vertical;border:none;border-radius:8px;background:rgba(255,253,247,.55);padding:11px 13px;margin-top:10px;font-family:var(--kai);font-size:16px;line-height:1.95;color:var(--ink);letter-spacing:.03em;position:relative;z-index:2}
+  #hbEntry:focus{outline:none;box-shadow:0 0 0 2px rgba(169,134,63,.3)}
+  .hobo-tools{display:flex;flex-wrap:wrap;gap:5px;align-items:center;justify-content:flex-end;padding:0}
+  .hobo-tools .hdc{width:18px;height:18px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+  .hobo-tools .hdc.on{border-color:var(--ink)}
+  .hobo-tools button:not(.hdc){font-family:var(--sans);font-size:11.5px;padding:3px 9px;border-radius:12px;border:1px solid var(--line);background:rgba(255,253,247,.72);color:var(--ink);cursor:pointer}
+  .hobo-tools button:not(.hdc).on{border-color:var(--gold);background:#fff}
+  .hobo-tools .hsep{width:1px;height:15px;background:var(--line);margin:0 2px}
+
+  /* 主體：時間軸 + 書寫區 */
+  .hobo-main{display:grid;grid-template-columns:46px 1fr;position:relative}
+  .hobo-time{display:flex;flex-direction:column;justify-content:space-between;padding:6px 0 18px;border-right:1px solid rgba(160,122,111,.25)}
+  .time-h{font-family:var(--sans);font-size:11px;color:var(--ink-soft);letter-spacing:.05em;opacity:.85;line-height:1}
+
+  .hobo-zone{position:relative;min-height:360px;padding:8px 6px 18px 13px}
+  .hobo-piece{position:relative;z-index:1;pointer-events:none}
+  .hp-cat{display:inline-block;font-family:var(--kai);font-size:12px;color:#fff;background:var(--seal);padding:2px 11px;border-radius:4px;letter-spacing:.16em;margin-bottom:6px}
+  .hp-meta{font-family:var(--kai);font-size:14px;color:var(--ink-soft);letter-spacing:.05em;margin-bottom:7px}
+  .hp-text{font-family:var(--kai);font-size:16px;line-height:1.95;color:var(--ink);white-space:pre-line;letter-spacing:.03em;max-width:33em}
+  #hbPad{position:absolute;inset:0;z-index:2;touch-action:none;cursor:crosshair}
+
+  /* 底部今日金句 */
+  .hobo-quote{margin:0 -20px;padding:13px 24px;border-top:1.5px solid rgba(160,122,111,.4);background:rgba(160,122,111,.08);font-family:var(--kai);font-size:16px;color:#8a6358;letter-spacing:.05em;text-align:center}
+  .hobo-quote .q-src{font-size:12px;color:var(--ink-soft);margin-left:8px;letter-spacing:.04em;white-space:nowrap}
+
+  @media(max-width:560px){
+    .hd-day{font-size:42px}
+    .hobo-cal{transform:scale(.9);transform-origin:top right}
+    .hp-text{font-size:15px}
+    .hobo-main{grid-template-columns:34px 1fr}
+    .hobo-tab{top:140px}
+  }
 </style>
 </head>
 <body>
@@ -251,6 +337,7 @@
       <span class="streak" id="streak">連續 0 天</span>
     </div>
     <div class="topctl">
+      <span class="viewtoggle" id="viewToggle"><button id="vClassic" class="on">📖 經典</button><button id="vHobo">🗓 手帳</button></span>
       <span class="progress" id="progress">已讀 <b>0</b> ／ 共 0 篇</span>
       <span class="fontctl"><button id="fsDown" title="縮小字級">A－</button><button id="fsUp" title="放大字級">A＋</button></span>
     </div>
@@ -312,6 +399,50 @@
     </div>
     <textarea id="entry" placeholder="順著上方「今日一問」，寫下今天的心得感想；也可以記下今天的心情與生活……" style="display:none"></textarea>
     <div class="diary-foot"><span id="count">0 字</span><span>自動儲存於此電腦</span></div>
+  </section>
+
+  <section class="hobo" id="hoboPage">
+    <div class="hobo-bar">
+      <span class="hobo-modes"><button id="hbModeDraw" class="on">✍ 手寫</button><button id="hbModeType">⌨ 打字</button></span>
+      <span class="hb-save" id="hbSave"></span>
+      <div class="hobo-tools" id="hbTools">
+        <button class="hdc on" data-c="#3a352f" style="background:#3a352f" title="墨"></button>
+        <button class="hdc" data-c="#9c6a5e" style="background:#9c6a5e" title="赭"></button>
+        <button class="hdc" data-c="#7d8a6a" style="background:#7d8a6a" title="苔綠"></button>
+        <button class="hdc" data-c="#6f7f8c" style="background:#6f7f8c" title="霧藍"></button>
+        <button class="hdc" data-c="#b08a4f" style="background:#b08a4f" title="赭金"></button>
+        <span class="hsep"></span>
+        <button id="hThin">細</button><button id="hMid" class="on">中</button><button id="hThick">粗</button>
+        <button id="hEraser">橡皮</button><button id="hUndo">↶ 復原</button><button id="hClear">清除</button>
+      </div>
+    </div>
+    <div class="hobo-sheet" id="hboSheet">
+      <div class="hobo-tab" id="hbTab"></div>
+      <div class="hobo-top">
+        <div class="hobo-date">
+          <div class="hd-day" id="hbDay">—</div>
+          <div>
+            <div class="hd-mon" id="hbMon">—</div>
+            <div class="hd-wd" id="hbWd">—</div>
+            <div class="hd-extra" id="hbExtra">—</div>
+          </div>
+        </div>
+        <div class="hobo-cal" id="hbCal"></div>
+      </div>
+      <div class="hobo-main">
+        <div class="hobo-time" id="hbTime"></div>
+        <div class="hobo-zone" id="hbZone">
+          <div class="hobo-piece">
+            <span class="hp-cat" id="hbCat">—</span>
+            <div class="hp-meta" id="hbMeta">—</div>
+            <div class="hp-text" id="hbText"></div>
+          </div>
+          <textarea id="hbEntry" placeholder="在這一頁寫下今天……（順著上方「今日一問」，或記下今日行程、心情）"></textarea>
+          <canvas id="hbPad"></canvas>
+        </div>
+      </div>
+      <div class="hobo-quote" id="hbQuote"></div>
+    </div>
   </section>
 
   <nav class="controls">
@@ -727,6 +858,26 @@ applyFont();
 
 let viewItem=null, viewCat=null, bookMode=false, curId=null, pendingSel=null, curNote=null;
 
+/* ---------- 手帳版面狀態與工具 ---------- */
+let viewMode=localStorage.getItem("gx_view")||"classic";
+const EN_MON=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+const EN_WD=["SUN","MON","TUE","WED","THU","FRI","SAT"];
+const CAL_WD=["日","一","二","三","四","五","六"];
+const HOURS=[6,9,12,15,18,21,0,3];
+const MOON_GLYPH=["🌑","🌒","🌓","🌔","🌕","🌖","🌗","🌘"];
+const MOON_NAME=["朔","蛾眉","上弦","盈凸","望","虧凸","下弦","殘"];
+function dayOfYear(d){return Math.round((startOfDay(d)-new Date(d.getFullYear(),0,0))/DAY);}
+function moonInfo(d){
+  const lunar=29.53058867, dayMs=86400000;
+  const known=Date.UTC(2000,0,6,18,14,0)/dayMs;
+  const now=Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/dayMs;
+  let age=(now-known)%lunar; if(age<0)age+=lunar;
+  const idx=Math.floor(age/lunar*8+0.5)%8;
+  return {glyph:MOON_GLYPH[idx],name:MOON_NAME[idx]};
+}
+function hasContent(d){const k=keyOf(d),t=localStorage.getItem("diary:"+k);
+  return !!((t&&t.trim())||localStorage.getItem("gx_canvas:"+k)||localStorage.getItem("gx_hobo:"+k));}
+
 // 不重複：以使用者的「開始週」為起點逐週推進，讀完整輪才循環
 function pieceFor(date){
   const cat=WEEKDAY_MAP[date.getDay()];
@@ -762,6 +913,7 @@ function fillCard(cat,label,item){
 
 // 藏書閣：自由翻閱任一篇（不寫日記）
 function viewPiece(cat,idx){
+  if(viewMode!=="classic"){viewMode="classic";localStorage.setItem("gx_view",viewMode);document.body.classList.remove("hobonichi");$("vClassic").classList.add("on");$("vHobo").classList.remove("on");}
   bookMode=true;
   const b=CORPUS[cat];
   document.querySelector(".diary").style.display="none";
@@ -795,10 +947,7 @@ function updateCount(){
 }
 function updateStreak(){
   let n=0,d=startOfDay(new Date());
-  while(true){
-    const dk=keyOf(d), t=localStorage.getItem("diary:"+dk), c=localStorage.getItem("gx_canvas:"+dk);
-    if((t&&t.trim())||c){n++;d=new Date(d.getTime()-DAY);}else break;
-  }
+  while(hasContent(d)){n++;d=new Date(d.getTime()-DAY);}
   $("streak").textContent="連續 "+n+" 天";
 }
 
@@ -827,10 +976,10 @@ $("speak").addEventListener("click",()=>{
 });
 
 /* ---------- 導覽（鍵盤左右翻頁） ---------- */
-$("prev").onclick=()=>{current=new Date(current.getTime()-DAY);render();};
-$("next").onclick=()=>{if(!$("next").disabled){current=new Date(current.getTime()+DAY);render();}};
-$("todayBtn").onclick=()=>{current=startOfDay(new Date());render();};
-$("backToday").onclick=()=>{current=startOfDay(new Date());render();window.scrollTo({top:0,behavior:"smooth"});};
+$("prev").onclick=()=>{current=new Date(current.getTime()-DAY);refresh();};
+$("next").onclick=()=>{if(!$("next").disabled){current=new Date(current.getTime()+DAY);refresh();}};
+$("todayBtn").onclick=()=>{current=startOfDay(new Date());refresh();};
+$("backToday").onclick=()=>{current=startOfDay(new Date());refresh();window.scrollTo({top:0,behavior:"smooth"});};
 document.addEventListener("keydown",e=>{
   if($("mask").classList.contains("show")||e.target.tagName==="TEXTAREA"||bookMode)return;
   if(e.key==="ArrowLeft")$("prev").click();
@@ -909,13 +1058,15 @@ function buildHist(){
     const d=parseKey(ds), {label,item}=pieceFor(d);
     const txt=localStorage.getItem("diary:"+ds)||"";
     const canv=localStorage.getItem("gx_canvas:"+ds);
+    const hobo=localStorage.getItem("gx_hobo:"+ds);
     const li=document.createElement("li");
-    const hd=document.createElement("div");hd.className="hd";hd.textContent=`${ds}　${WD_CH[d.getDay()]}`+(canv?"　🖌":"");
+    const hd=document.createElement("div");hd.className="hd";hd.textContent=`${ds}　${WD_CH[d.getDay()]}`+(canv?"　🖌":"")+(hobo?"　🗓":"");
     const hp=document.createElement("div");hp.className="hp";hp.textContent=`${label}· ${item.author}〈${item.title}〉`;
     li.append(hd,hp);
     if(txt.trim()){const hx=document.createElement("div");hx.className="hx";hx.textContent=txt;li.appendChild(hx);}
     if(canv){const im=document.createElement("img");im.className="histimg";im.src=canv;li.appendChild(im);}
-    li.onclick=()=>{current=d;render();$("mask").classList.remove("show");window.scrollTo({top:0,behavior:"smooth"});};
+    if(hobo){const im=document.createElement("img");im.className="histimg";im.src=hobo;li.appendChild(im);}
+    li.onclick=()=>{current=d;refresh();$("mask").classList.remove("show");window.scrollTo({top:0,behavior:"smooth"});};
     list.appendChild(li);
   });
 }
@@ -935,17 +1086,21 @@ $("expMd").onclick=()=>{
     const d=parseKey(ds),{label,item}=pieceFor(d);
     const txt=localStorage.getItem("diary:"+ds)||"";
     const canv=localStorage.getItem("gx_canvas:"+ds);
+    const hobo=localStorage.getItem("gx_hobo:"+ds);
     md+=`## ${ds}（${WD_CH[d.getDay()]}）· ${label} · ${item.author}〈${item.title}〉\n\n`;
     if(txt.trim())md+=txt+"\n\n";
     if(canv)md+=`![手繪](${canv})\n\n`;
+    if(hobo)md+=`![手帳頁](${hobo})\n\n`;
     md+="---\n\n";
   });
   download(`每日國學隨筆_${keyOf(new Date())}.md`,md,"text/markdown;charset=utf-8");
 };
 $("expJson").onclick=()=>{
-  const obj={app:"每日國學日記",exported:new Date().toISOString(),entries:{},canvases:{}};
+  const obj={app:"每日國學日記",exported:new Date().toISOString(),entries:{},canvases:{},hobos:{}};
   allEntries().forEach(([ds,txt])=>obj.entries[ds]=txt);
-  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("gx_canvas:"))obj.canvases[k.slice(10)]=localStorage.getItem(k);}
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k)continue;
+    if(k.startsWith("gx_canvas:"))obj.canvases[k.slice(10)]=localStorage.getItem(k);
+    else if(k.startsWith("gx_hobo:"))obj.hobos[k.slice(8)]=localStorage.getItem(k);}
   download(`每日國學備份_${keyOf(new Date())}.json`,JSON.stringify(obj,null,2),"application/json");
 };
 $("impJson").onchange=e=>{
@@ -954,11 +1109,12 @@ $("impJson").onchange=e=>{
   r.onload=()=>{
     try{
       const o=JSON.parse(r.result);
-      if(!o.entries&&!o.canvases)throw 0;
+      if(!o.entries&&!o.canvases&&!o.hobos)throw 0;
       let c=0;
       Object.entries(o.entries||{}).forEach(([k,v])=>{if(v&&v.trim()){localStorage.setItem("diary:"+k,v);c++;}});
       Object.entries(o.canvases||{}).forEach(([k,v])=>{if(v){localStorage.setItem("gx_canvas:"+k,v);c++;}});
-      alert(`已還原 ${c} 筆隨筆／手繪。`);render();buildHist();
+      Object.entries(o.hobos||{}).forEach(([k,v])=>{if(v){localStorage.setItem("gx_hobo:"+k,v);c++;}});
+      alert(`已還原 ${c} 筆隨筆／手繪／手帳。`);refresh();buildHist();
     }catch(_){alert("檔案格式不正確。");}
   };
   r.readAsText(f);
@@ -1095,17 +1251,143 @@ $("dUndo").onclick=()=>{dStrokes.pop();redrawDiary();saveDiary();updateStreak();
 $("dClear").onclick=()=>{dStrokes=[];dBase=null;const c=$("diarypad");c.getContext("2d").clearRect(0,0,c.width,c.height);localStorage.removeItem(diaryKey());$("saveState").textContent="";updateStreak();};
 $("modeDraw").onclick=()=>setDiaryMode(true);
 $("modeType").onclick=()=>setDiaryMode(false);
-window.addEventListener("resize",()=>{if(diaryMode==="draw"){sizeDiary();loadDiary();}});
+window.addEventListener("resize",()=>{if(viewMode==="hobo"&&hoboMode==="draw"){sizeHbPad();loadHbPad();}else if(viewMode!=="hobo"&&diaryMode==="draw"){sizeDiary();loadDiary();}});
 function allDiaryDates(){
   const set=new Set();
   for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k)continue;
     if(k.startsWith("diary:")){const v=localStorage.getItem(k);if(v&&v.trim())set.add(k.slice(6));}
-    else if(k.startsWith("gx_canvas:"))set.add(k.slice(10));}
+    else if(k.startsWith("gx_canvas:"))set.add(k.slice(10));
+    else if(k.startsWith("gx_hobo:"))set.add(k.slice(8));}
   return [...set].sort((a,b)=>a<b?1:-1);
 }
-setDiaryMode(diaryMode==="draw");
+/* ---------- 手帳版面渲染 ---------- */
+function renderHobo(){
+  bookMode=false; $("bookbar").classList.remove("show");
+  const {cat,label,item}=pieceFor(current);
+  curId=pid(cat,item);
+  $("dateText").textContent=`${current.getFullYear()}年${current.getMonth()+1}月${current.getDate()}日　${WD_CH[current.getDay()]}`;
+  const rd=getSet("gx_read"), id=pid(cat,item);
+  if(!rd.has(id)){rd.add(id);putSet("gx_read",rd);}
+  $("progress").innerHTML=`已讀 <b>${getSet("gx_read").size}</b> ／ 共 ${TOTAL} 篇`;
+  const wd=current.getDay(), mi=moonInfo(current);
+  $("hbDay").textContent=current.getDate();
+  $("hbMon").textContent=EN_MON[current.getMonth()];
+  $("hbWd").textContent=`${EN_WD[wd]} · ${WD_CH[wd]}`;
+  $("hbExtra").innerHTML=`一年第 ${dayOfYear(current)} 天　<span class="moon">${mi.glyph}</span>${mi.name}`;
+  $("hbCat").textContent=label;
+  $("hbMeta").textContent=`${item.dynasty}　${item.author}〈${item.title}〉`;
+  $("hbText").textContent=item.text;
+  $("hbQuote").innerHTML=`「${item.best}」<span class="q-src">——〈${item.title}〉</span>`;
+  buildHboTime(); buildHboCal(); buildHboTab();
+  if(hoboMode==="draw"){sizeHbPad();loadHbPad();}
+  else{$("hbEntry").value=localStorage.getItem("diary:"+keyOf(current))||"";$("hbSave").textContent="";}
+  $("next").disabled=startOfDay(current)>=startOfDay(new Date());
+  updateStreak();
+}
+function buildHboTime(){
+  const t=$("hbTime"); t.innerHTML="";
+  HOURS.forEach(h=>{const s=document.createElement("div");s.className="time-h";s.textContent=pad(h);t.appendChild(s);});
+}
+function buildHboCal(){
+  const cal=$("hbCal"); cal.innerHTML="";
+  const y=current.getFullYear(), m=current.getMonth(), today=startOfDay(new Date());
+  const head=document.createElement("div"); head.className="cal-grid cal-head";
+  CAL_WD.forEach(w=>{const s=document.createElement("span");s.textContent=w;head.appendChild(s);});
+  cal.appendChild(head);
+  const grid=document.createElement("div"); grid.className="cal-grid";
+  const first=new Date(y,m,1).getDay(), days=new Date(y,m+1,0).getDate();
+  for(let i=0;i<first;i++){const s=document.createElement("span");s.className="cal-blank";grid.appendChild(s);}
+  for(let dn=1;dn<=days;dn++){
+    const cell=startOfDay(new Date(y,m,dn)), s=document.createElement("span");
+    s.className="cal-day"; s.textContent=dn;
+    if(keyOf(cell)===keyOf(current))s.classList.add("cur");
+    if(keyOf(cell)===keyOf(today))s.classList.add("today");
+    if(hasContent(cell))s.classList.add("dot");
+    if(cell>today)s.classList.add("future");
+    else s.onclick=()=>{current=cell;renderHobo();window.scrollTo({top:0,behavior:"smooth"});};
+    grid.appendChild(s);
+  }
+  cal.appendChild(grid);
+}
+function buildHboTab(){
+  const tab=$("hbTab"); tab.innerHTML="";
+  const y=current.getFullYear(), today=startOfDay(new Date());
+  for(let mo=0;mo<12;mo++){
+    const b=document.createElement("button"); b.textContent=mo+1;
+    if(mo===current.getMonth())b.classList.add("on");
+    const last=new Date(y,mo+1,0).getDate();
+    const target=startOfDay(new Date(y,mo,Math.min(current.getDate(),last)));
+    if(target>today)b.disabled=true;
+    else b.onclick=()=>{current=target;renderHobo();window.scrollTo({top:0,behavior:"smooth"});};
+    tab.appendChild(b);
+  }
+}
 
-render();
+/* ---------- 手帳手寫畫布（依日期，鍵 gx_hobo:） ---------- */
+let hDrawing=false,hStrokes=[],hBase=null,hColor="#3a352f",hWidth=2.4,hErase=false;
+function hboKey(){return "gx_hobo:"+keyOf(current);}
+function sizeHbPad(){const c=$("hbPad"),z=$("hbZone");if(!c||!z)return;const W=Math.round(z.clientWidth)||560,H=Math.round(z.clientHeight)||360;c.width=Math.max(60,W);c.height=Math.max(60,H);c.style.width=W+"px";c.style.height=H+"px";const x=c.getContext("2d");x.lineCap="round";x.lineJoin="round";redrawHbPad();}
+function redrawHbPad(){const c=$("hbPad");if(!c)return;const x=c.getContext("2d");x.clearRect(0,0,c.width,c.height);if(hBase)x.drawImage(hBase,0,0,c.width,c.height);hStrokes.forEach(st=>{x.globalCompositeOperation=st.e?"destination-out":"source-over";x.strokeStyle=st.color;x.lineWidth=st.width;x.beginPath();st.points.forEach((p,i)=>i?x.lineTo(p.x,p.y):x.moveTo(p.x,p.y));x.stroke();});x.globalCompositeOperation="source-over";}
+function loadHbPad(){hStrokes=[];hBase=null;const c=$("hbPad");if(!c)return;c.getContext("2d").clearRect(0,0,c.width,c.height);const data=localStorage.getItem(hboKey());if(data){const img=new Image();img.onload=()=>{hBase=img;redrawHbPad();};img.src=data;}}
+function saveHbPad(){try{localStorage.setItem(hboKey(),$("hbPad").toDataURL("image/png"));}catch(_){}}
+function hwTool(){$("hThin").classList.toggle("on",hWidth===1.6);$("hMid").classList.toggle("on",hWidth===2.4);$("hThick").classList.toggle("on",hWidth===4.5);}
+(function(){
+  const c=$("hbPad"); if(!c)return;
+  c.addEventListener("pointerdown",e=>{e.preventDefault();hDrawing=true;try{c.setPointerCapture(e.pointerId);}catch(_){}const pr=e.pressure>0?0.6+e.pressure*0.8:1;hStrokes.push({color:hColor,width:(hErase?hWidth*7:hWidth)*pr,e:hErase,points:[{x:e.offsetX,y:e.offsetY}]});});
+  c.addEventListener("pointermove",e=>{if(!hDrawing)return;const st=hStrokes[hStrokes.length-1];st.points.push({x:e.offsetX,y:e.offsetY});const x=c.getContext("2d"),n=st.points.length;x.globalCompositeOperation=st.e?"destination-out":"source-over";x.strokeStyle=st.color;x.lineWidth=st.width;x.beginPath();x.moveTo(st.points[n-2].x,st.points[n-2].y);x.lineTo(st.points[n-1].x,st.points[n-1].y);x.stroke();x.globalCompositeOperation="source-over";});
+  c.addEventListener("pointerup",()=>{if(hDrawing){hDrawing=false;saveHbPad();updateStreak();buildHboCal();}});
+  c.addEventListener("pointercancel",()=>{hDrawing=false;});
+})();
+document.querySelectorAll(".hobo-tools .hdc").forEach(b=>b.onclick=()=>{hColor=b.dataset.c;hErase=false;document.querySelectorAll(".hobo-tools .hdc").forEach(x=>x.classList.remove("on"));b.classList.add("on");$("hEraser").classList.remove("on");});
+$("hThin").onclick=()=>{hWidth=1.6;hErase=false;$("hEraser").classList.remove("on");hwTool();};
+$("hMid").onclick=()=>{hWidth=2.4;hErase=false;$("hEraser").classList.remove("on");hwTool();};
+$("hThick").onclick=()=>{hWidth=4.5;hErase=false;$("hEraser").classList.remove("on");hwTool();};
+$("hEraser").onclick=()=>{hErase=!hErase;$("hEraser").classList.toggle("on",hErase);};
+$("hUndo").onclick=()=>{hStrokes.pop();redrawHbPad();saveHbPad();updateStreak();buildHboCal();};
+$("hClear").onclick=()=>{hStrokes=[];hBase=null;const c=$("hbPad");if(c)c.getContext("2d").clearRect(0,0,c.width,c.height);localStorage.removeItem(hboKey());updateStreak();buildHboCal();};
+
+/* ---------- 手帳頁：手寫／打字雙模式（打字共用 diary:） ---------- */
+let hoboMode=localStorage.getItem("gx_hobomode")||"draw";
+function setHoboMode(draw){
+  hoboMode=draw?"draw":"type"; localStorage.setItem("gx_hobomode",hoboMode);
+  $("hbModeDraw").classList.toggle("on",draw); $("hbModeType").classList.toggle("on",!draw);
+  $("hbTools").style.display=draw?"":"none";
+  $("hbPad").style.display=draw?"":"none";
+  $("hbEntry").style.display=draw?"none":"block";
+  if(viewMode==="hobo"){
+    if(draw){sizeHbPad();loadHbPad();}
+    else{$("hbEntry").value=localStorage.getItem("diary:"+keyOf(current))||"";$("hbSave").textContent="";}
+  }
+}
+$("hbModeDraw").onclick=()=>setHoboMode(true);
+$("hbModeType").onclick=()=>setHoboMode(false);
+let hbTimer;
+$("hbEntry").addEventListener("input",()=>{
+  $("hbSave").textContent="輸入中…";
+  clearTimeout(hbTimer); hbTimer=setTimeout(saveHbEntry,400);
+});
+function saveHbEntry(){
+  const k="diary:"+keyOf(current), v=$("hbEntry").value;
+  if(v.trim())localStorage.setItem(k,v); else localStorage.removeItem(k);
+  const t=new Date();
+  $("hbSave").textContent=`已儲存 ✓ ${pad(t.getHours())}:${pad(t.getMinutes())}`;
+  updateStreak(); buildHboCal();
+}
+
+/* ---------- 版面切換 ---------- */
+function refresh(){ if(viewMode==="hobo") renderHobo(); else render(); }
+function applyView(){
+  document.body.classList.toggle("hobonichi",viewMode==="hobo");
+  $("vClassic").classList.toggle("on",viewMode==="classic");
+  $("vHobo").classList.toggle("on",viewMode==="hobo");
+  refresh();
+}
+$("vClassic").onclick=()=>{if(viewMode!=="classic"){viewMode="classic";localStorage.setItem("gx_view",viewMode);applyView();window.scrollTo({top:0,behavior:"smooth"});}};
+$("vHobo").onclick=()=>{if(viewMode!=="hobo"){viewMode="hobo";localStorage.setItem("gx_view",viewMode);applyView();window.scrollTo({top:0,behavior:"smooth"});}};
+
+setDiaryMode(diaryMode==="draw");
+setHoboMode(hoboMode==="draw");
+applyView();
 </script>
 <script>if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}</script>
 </body>

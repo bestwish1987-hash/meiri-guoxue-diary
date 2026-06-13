@@ -1,5 +1,27 @@
 # 開發日誌 · DEVLOG
 
+## 2026-06-13 — Session 2：Hobonichi 手帳一日一頁版面
+
+### 做了什麼
+1. **版面切換**：header 加「📖 經典 / 🗓 手帳」切換鈕，存 `gx_view`；`body.hobonichi` 控制顯示，手帳頁 `#hoboPage` 與既有電子書卡片互斥。導覽改走 `refresh()`（依模式呼叫 `render()` 或 `renderHobo()`）。
+2. **點陣紙手帳頁**（`.hobo-sheet`）：18px radial-gradient 點陣、莫蘭迪 `#f4f0e7`、左側金漸層書脊。
+3. **日期區塊**：大日 + `EN_MON` + `EN_WD · 週幾` + `dayOfYear` 一年第幾天 + 月相（`moonInfo`：以 2000-01-06 朔為基準推 8 相 emoji + 朔/上弦/望…）。
+4. **左側時間軸**：06/09/12/15/18/21/00/03，flex `space-between` 隨頁高自動分布。
+5. **迷你月曆**（`buildHboCal`）：今天高亮、有內容的日子有金點、點日跳轉；**月份側邊 tab**（`buildHboTab`，1–12、現月亮、未來月 disabled）。
+6. **手寫／打字雙模式**（`gx_hobomode`，預設手寫；`setHoboMode`）：✍ 手寫 `#hbPad` 覆蓋書寫區，沿用 diary canvas 的 pointer 模式，存 **`gx_hobo:YYYY-MM-DD`**（獨立鍵，不與 `gx_canvas` 互相縮放失真）；⌨ 打字 `#hbEntry` textarea **共用 `diary:` 鍵**（與經典隨筆打字同一份，切視圖互通；故 streak/回顧/匯出免再整合）。切換鈕在 `.hobo-bar`（手寫時顯示筆色工具列、打字時隱藏）。**坑**：`#hbEntry` CSS 預設 `display:none`，setHoboMode 切打字要設 `display:block` 不能設 `""`（會 fallback 回 none）。
+7. **底部今日金句**：當日 `item.best` 滿版頁底，呼應 hobonichi 每日一句。
+8. **整合**：`gx_hobo` 併入連續天數（`hasContent`）、`allDiaryDates`、回顧（🗓 縮圖）、匯出 MD / JSON 備份 / 還原。
+
+### 驗證方式
+- `node --check`（抽出 inline JS）通過。
+- 無頭瀏覽器 `preview_eval` 逐項實測：grid 量測（720 / 46+1fr / canvas==zone）、真 pointer 事件畫一筆→存檔+連續天數+月曆金點、月曆/月tab/上下日導覽、**84 天掃描 canvas 高永遠 == zone（含木蘭詩 422 字→頁高 1292、零 mismatch）**、經典⇄手帳切換持久化——全程零 console 錯誤。
+- 註：本環境 `preview_screenshot` 逾時（擷圖管線問題，非頁面問題；eval 正常、console 乾淨），改以幾何/功能量測 + show_widget 還原預覽驗收。
+
+### 現狀
+- 40 篇不變；新增手帳版面。repo 待 commit（v2）。
+
+---
+
 ## 2026-06-13 — Session 1：從 0 到 v1（電子書 + 手帳日記 app）
 
 ### 做了什麼（時序）
@@ -29,7 +51,7 @@
 3. **擴到 366 篇不重複**：Wikisource/ctext 逐字查證（禁杜撰）；建議把 `CORPUS` 抽成 `data/corpus.json` 方便分批擴充。
 
 ### localStorage keys
-`gx_start`｜`diary:YYYY-MM-DD`(打字)｜`gx_canvas:YYYY-MM-DD`(隨筆畫布)｜`gx_diarymode`｜`gx_read`/`gx_marks`(篇id)｜`gx_anno`(劃線批註,依篇)｜`gx_ink`(詩上手寫,依篇)｜`gx_font`
+`gx_start`｜`diary:YYYY-MM-DD`(打字)｜`gx_canvas:YYYY-MM-DD`(隨筆畫布)｜`gx_hobo:YYYY-MM-DD`(手帳頁手寫，Session 2)｜`gx_diarymode`｜`gx_hobomode`(手帳手寫/打字，Session 2)｜`gx_view`(經典/手帳，Session 2)｜`gx_read`/`gx_marks`(篇id)｜`gx_anno`(劃線批註,依篇)｜`gx_ink`(詩上手寫,依篇)｜`gx_font`
 
 ### 原則
 - **原文一律查證、禁憑記憶杜撰**（用字、作者、出處錯了就失去意義）。
