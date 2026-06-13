@@ -3,10 +3,11 @@
 ## 1. 變成 app
 - [x] 單檔離線 HTML
 - [x] PWA：`manifest.webmanifest` + `sw.js`（app shell 離線快取）+ `index.html` 已註冊 Service Worker
-- [ ] PNG icon（192 / 512 / maskable）；目前先用 `icon.svg`
-- [ ] 部署 GitHub Pages（Settings → Pages → Branch: main / root）→ 取得 https 網址
-- [ ] 瀏覽器「安裝應用程式」→ 釘到桌面 / 手機主畫面（standalone）
-- [ ] （進階）改 [Tauri](https://tauri.app) 打包成真正的桌面 `.exe`
+- [x] **PNG / ICO icon**（`icon-192.png` / `icon-512.png` any+maskable / `apple-touch-icon.png` / `icon.ico`）— Pillow 以標楷體 kaiu.ttf 畫「學」印章，manifest 與 `<head>` favicon 都已換 PNG。
+- [x] **本機桌面 app（Session 6 已做，預設路線）**：桌面＋開始功能表捷徑「每日國學.lnk」→ `chrome --app=file:///…/index.html`（無邊框獨立視窗）。**用預設瀏覽器 Chrome＋預設 profile，file:// 同源 → 既有日記資料無縫接續**；圖示用 `icon.ico`。**坑**：中文路徑要用 `[Uri].AbsoluteUri` 轉成 %編碼，直接放原字會在命令列被 ANSI 轉碼→載到 about:blank。
+- [ ] （可選 A）**裝成 PWA / 手機也能用**：部署 GitHub Pages 取 https → 瀏覽器「安裝應用程式」。**需把 repo 改 public（或 GitHub Pro 才有私有 Pages）**＋修 `sw.js` 快取版本號（避免舊快取卡更新，見 2.x 註）。
+- [ ] （可選 B，進階）**打包真正 `.exe`**：[Tauri](https://tauri.app)。**本機尚無 Rust/cargo，需先裝 Rust + VS Build Tools（約 GB）**。
+- [ ] （可選）把每晚 20:45 排程從 explorer 開檔改為開「每日國學.lnk」app 視窗。
 
 ## 2. Hobonichi 風版面（參考 ほぼ日手帳 一日一頁）✅ 已完成（Session 2）
 頂部「📖 經典 / 🗓 手帳」切換鈕（`gx_view`），`body.hobonichi` 切換主題，手帳頁為自成一頁的 `#hoboPage`。

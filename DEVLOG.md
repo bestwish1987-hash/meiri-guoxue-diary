@@ -1,5 +1,23 @@
 # 開發日誌 · DEVLOG
 
+## 2026-06-13 — Session 6：製作成 app（本機桌面 app 路線）
+
+### 做了什麼
+- **圖示**：Pillow（PIL 12.2）以 `C:\Windows\Fonts\kaiu.ttf`（標楷體）畫「學」印章 → `icon-192.png` / `icon-512.png`（full-bleed 方底，any+maskable 通用）/ `apple-touch-icon.png`(180) / `icon.ico`(多尺寸 16–256)。`<head>` favicon 與 `manifest.webmanifest` icons 都改 PNG（保留 svg 當補充）。
+- **本機桌面 app**：偵測預設瀏覽器＝**Chrome**（registry `FileExts\.html\UserChoice`=ChromeHTML），故 launcher 用 Chrome `--app=<file URI>` 開無邊框獨立視窗。建立桌面＋開始功能表捷徑「每日國學.lnk」（WScript.Shell），圖示 `icon.ico`。**用預設 profile（不帶 --user-data-dir）＋同一個 file:// → localStorage 同源，既有日記資料無縫**。
+- **驗證**：launch 後列舉視窗，確認出現標題「每日國學日記」的視窗。
+- **踩到的坑**：第一版捷徑直接放中文路徑 `file:///D:/每日國學日記/index.html`，命令列被 ANSI 轉碼→Chrome 找不到檔→開成 about:blank。改用 `([Uri]"D:\…\index.html").AbsoluteUri` 轉成 `file:///D:/%E6%AF%8F…/index.html`（純 ASCII %編碼）即正常。同檔→Chrome 正規化後同源，資料續接不受影響。
+
+### 為何選本機路線（vs PWA / Tauri）
+- PWA 安裝需 https；repo 是 private，GitHub Pages 私有需 Pro，否則要改 public（使用者決定）。
+- Tauri 需 Rust + VS Build Tools（本機無 cargo，約 GB）。
+- 本機 Chrome `--app` 捷徑：零安裝、純離線、保住既有資料、立刻就是「app」。PWA/Tauri 列為可選升級。
+
+### 現狀
+- 桌面/開始功能表有「每日國學」app 捷徑，雙擊＝無邊框 app 視窗。新增 4 個 icon 檔 + manifest/head 改 PNG。repo 待 commit（v3.1）。
+
+---
+
 ## 2026-06-13 — Session 5：每月莫蘭迪主色
 
 ### 做了什麼
