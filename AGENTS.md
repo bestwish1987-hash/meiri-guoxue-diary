@@ -50,6 +50,8 @@
 主題（莫蘭迪／宣紙／夜間）、灰階月相 SVG、朗讀語速＋語音、手帳農曆＋節氣 皆已上線。
 
 ## 366 篇擴充（進行中）
+> 現成的續補 prompt 範本：[`docs/expand-prompt.md`](docs/expand-prompt.md)（可直接貼給 Codex）。
+
 目標每類 ~52。流程：**選目 → 查證 wikisource/ctext 撰六欄 → 第二代理逐字校對 → 合併進 index.html**。
 - **教訓：一次跑太多代理會撞 session 用量上限、大半做白工（曾 288 萬 token 只換 2 首）。請小批，每批 10–12 首。**
 - 多代理產出請回傳 JSON，由主流程**集中**寫進 `index.html`（避免並行改同一檔衝突）。
