@@ -1,5 +1,24 @@
 # 開發日誌 · DEVLOG
 
+## 2026-06-13 — Session 7：每週自動備份 + 設定面板 + SW 改 network-first
+
+### 做了什麼
+- **設定面板**：模態多一個「設定」分頁（switchTab 改吃三頁 toc/hist/set）。
+- **每週自動備份**：`maybeAutoBackup()` 在開 app 時跑——若啟用(預設開)＋有資料＋距上次≥間隔(預設7天)，延遲 1.8s 自動匯出 JSON 到下載資料夾、記 `gx_lastbackup`、跳 toast。設定可開關(`gx_autobackup`)、選間隔週/兩週/月(`gx_backupinterval`)、「立即備份」。expJson 重構成 `buildBackupJson`/`doBackup(auto)` 共用。
+- **toast** 輕提示元件（showToast）。
+- **sw.js 改 network-first**：版本 bump `guoxue-v2`；導覽(HTML)有網路就拿最新、離線回退快取；其他資源 stale-while-revalidate；CORE 補進 PNG icon。**解掉舊的 cache-first 永遠吃舊版問題（為上 Pages 鋪路）**。
+- 自動開啟時間/開關：設定面板裡說明「請用桌面捷徑調整」（Windows 排程，網頁無法直接控制）→ 配套見 Session 8 的桌面工具。
+
+### 驗證
+- node --check（sw.js + index inline JS）過。
+- 無頭瀏覽器：設定分頁切換、開關/間隔持久化、立即備份設 gx_lastbackup+toast、**開 app 自動備份確實觸發(清掉 lastbackup+有資料→重載後已自動補上日期)**、關閉時不備份(off respected)；零 console 錯誤。
+- 註：自動備份用程式觸發 blob 下載，單一檔通常 Chrome 允許；首次可能跳「允許多個下載」一次。
+
+### 現狀
+- app 內可控每週自動備份。sw.js network-first。repo 待 commit（v3.2）。
+
+---
+
 ## 2026-06-13 — Session 6：製作成 app（本機桌面 app 路線）
 
 ### 做了什麼

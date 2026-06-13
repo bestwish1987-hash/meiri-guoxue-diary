@@ -388,6 +388,20 @@
   .hobo-quote{background:color-mix(in srgb,var(--seal) 9%,transparent);border-top-color:color-mix(in srgb,var(--seal) 42%,transparent);color:color-mix(in srgb,var(--seal) 80%,#231e1b)}
   .hd-hue{display:inline-flex;align-items:center;gap:5px;margin-top:7px;font-family:var(--sans);font-size:11px;color:var(--ink-soft);letter-spacing:.06em}
   .hd-hue::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--seal);box-shadow:0 1px 2px rgba(80,60,40,.25)}
+
+  /* ---- 設定面板 + 提示 toast ---- */
+  #setPane .set-row{border:1px solid var(--line);border-radius:9px;padding:13px 15px;margin-bottom:12px;background:#fffdf7}
+  .set-h{font-family:var(--kai);font-size:15px;color:var(--ink);letter-spacing:.08em;margin-bottom:5px}
+  .set-d{font-size:12.5px;color:var(--ink-soft);line-height:1.7;margin-bottom:10px}
+  .set-d b{color:var(--seal);font-weight:400}
+  .set-toggle{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--ink);cursor:pointer;font-family:var(--kai);letter-spacing:.06em}
+  .set-toggle input{width:17px;height:17px;accent-color:var(--seal);cursor:pointer}
+  .set-line{display:flex;align-items:center;gap:9px;margin-top:11px;font-size:13px;color:var(--ink-soft);flex-wrap:wrap}
+  .set-line select{font-family:var(--sans);font-size:13px;padding:4px 8px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+  .set-line button{font-family:var(--sans);font-size:13px;padding:5px 13px;border-radius:16px;border:1px solid var(--seal);background:var(--seal);color:#fff;cursor:pointer}
+  .set-last{font-size:12px;color:var(--gold);margin-top:9px;letter-spacing:.04em}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(8px);background:#544c44;color:#fff;font-size:13.5px;padding:10px 18px;border-radius:22px;box-shadow:0 6px 20px rgba(0,0,0,.3);z-index:60;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;font-family:var(--sans);letter-spacing:.04em;max-width:90vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
@@ -561,6 +575,7 @@
     <div class="tabs">
       <button id="tabToc" class="on">目錄 · 藏書</button>
       <button id="tabHist">回顧 · 隨筆</button>
+      <button id="tabSet">設定</button>
     </div>
     <div id="tocPane"></div>
     <div id="histPane" style="display:none">
@@ -572,8 +587,25 @@
         <label>還原備份<input type="file" id="impJson" accept=".json" hidden></label>
       </div>
     </div>
+    <div id="setPane" style="display:none">
+      <div class="set-row">
+        <div class="set-h">每週自動備份</div>
+        <div class="set-d">每隔一段時間自動把日記、手寫、手帳匯出成一個 JSON 檔（存到「下載」資料夾），萬一清掉瀏覽器資料也救得回來。</div>
+        <label class="set-toggle"><input type="checkbox" id="abEnable"><span>啟用自動備份</span></label>
+        <div class="set-line">間隔
+          <select id="abInterval"><option value="7">每週</option><option value="14">每兩週</option><option value="30">每月</option></select>
+          <button id="abNow">立即備份一次</button>
+        </div>
+        <div class="set-last" id="abLast">尚未自動備份</div>
+      </div>
+      <div class="set-row">
+        <div class="set-h">每天自動開啟（桌面）</div>
+        <div class="set-d">每天定時自動跳出 app。<b>時間／開關</b>請用桌面捷徑 <b>「每日國學 · 自動開啟設定」</b> 調整 —— 這是 Windows 排程，網頁／app 內無法直接改。</div>
+      </div>
+    </div>
   </div>
 </div>
+<div class="toast" id="toast"></div>
 
 <div class="selbar" id="selbar">
   <button id="mkLine">✎ 劃線</button>
@@ -1114,12 +1146,14 @@ $("closeModal").onclick=()=>$("mask").classList.remove("show");
 $("mask").addEventListener("click",e=>{if(e.target===$("mask"))$("mask").classList.remove("show");});
 $("tabToc").onclick=()=>switchTab("toc");
 $("tabHist").onclick=()=>switchTab("hist");
+$("tabSet").onclick=()=>switchTab("set");
 function openModal(which){buildToc();buildHist();switchTab(which);$("mask").classList.add("show");}
 function switchTab(w){
-  const toc=w==="toc";
-  $("tabToc").classList.toggle("on",toc); $("tabHist").classList.toggle("on",!toc);
-  $("tocPane").style.display=toc?"":"none"; $("histPane").style.display=toc?"none":"";
-  $("modalTitle").firstChild.textContent=toc?"目錄 ":"回顧 · 我的隨筆 ";
+  [["toc","tabToc","tocPane"],["hist","tabHist","histPane"],["set","tabSet","setPane"]].forEach(([k,tab,pane])=>{
+    $(tab).classList.toggle("on",k===w); $(pane).style.display=(k===w)?"":"none";
+  });
+  $("modalTitle").firstChild.textContent = w==="toc"?"目錄 " : w==="hist"?"回顧 · 我的隨筆 " : "設定 ";
+  if(w==="set")buildSet();
 }
 function buildToc(){
   const rd=getSet("gx_read"), mk=getSet("gx_marks"), pane=$("tocPane"); pane.innerHTML="";
@@ -1207,14 +1241,48 @@ $("expMd").onclick=()=>{
   });
   download(`每日國學隨筆_${keyOf(new Date())}.md`,md,"text/markdown;charset=utf-8");
 };
-$("expJson").onclick=()=>{
+function buildBackupJson(){
   const obj={app:"每日國學日記",exported:new Date().toISOString(),entries:{},canvases:{},hobos:{}};
   allEntries().forEach(([ds,txt])=>obj.entries[ds]=txt);
   for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k)continue;
     if(k.startsWith("gx_canvas:"))obj.canvases[k.slice(10)]=localStorage.getItem(k);
     else if(k.startsWith("gx_hobo:"))obj.hobos[k.slice(8)]=localStorage.getItem(k);}
+  return obj;
+}
+function backupCount(o){return Object.keys(o.entries).length+Object.keys(o.canvases).length+Object.keys(o.hobos).length;}
+function doBackup(auto){
+  const obj=buildBackupJson();
+  if(backupCount(obj)===0){ if(!auto)showToast("還沒有日記可以備份"); return false; }
   download(`每日國學備份_${keyOf(new Date())}.json`,JSON.stringify(obj,null,2),"application/json");
-};
+  localStorage.setItem("gx_lastbackup",keyOf(new Date()));
+  updateBackupInfo();
+  showToast(auto?"已自動備份本週 ✓（存到下載資料夾）":"已備份 ✓（存到下載資料夾）");
+  return true;
+}
+$("expJson").onclick=()=>doBackup(false);
+// 自動備份：依間隔，開 app 時若到期就自動匯出一次
+function maybeAutoBackup(){
+  if(localStorage.getItem("gx_autobackup")==="off")return;
+  if(backupCount(buildBackupJson())===0)return;
+  const iv=parseInt(localStorage.getItem("gx_backupinterval")||"7",10);
+  const last=localStorage.getItem("gx_lastbackup");
+  const due=!last || (startOfDay(new Date())-parseKey(last))/DAY >= iv;
+  if(due) setTimeout(()=>doBackup(true),1800);
+}
+function updateBackupInfo(){
+  const last=localStorage.getItem("gx_lastbackup");
+  if($("abLast")) $("abLast").textContent = last? ("上次備份："+last) : "尚未自動備份";
+}
+function buildSet(){
+  $("abEnable").checked = localStorage.getItem("gx_autobackup")!=="off";
+  $("abInterval").value = localStorage.getItem("gx_backupinterval")||"7";
+  updateBackupInfo();
+}
+$("abEnable").onchange=()=>localStorage.setItem("gx_autobackup",$("abEnable").checked?"on":"off");
+$("abInterval").onchange=()=>localStorage.setItem("gx_backupinterval",$("abInterval").value);
+$("abNow").onclick=()=>doBackup(false);
+let toastT;
+function showToast(msg){const t=$("toast");if(!t)return;t.textContent=msg;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2800);}
 $("impJson").onchange=e=>{
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
@@ -1554,6 +1622,7 @@ $("vHobo").onclick=()=>setView("hobo");
 setDiaryMode(diaryMode==="draw");
 setHoboMode(hoboMode==="draw");
 applyView();
+maybeAutoBackup();
 </script>
 <script>if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}</script>
 </body>
