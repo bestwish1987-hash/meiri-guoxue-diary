@@ -274,8 +274,6 @@
   .cal-day:hover{background:rgba(169,154,120,.25)}
   .cal-day.cur{background:var(--seal);color:#fff}
   .cal-day.today:not(.cur){box-shadow:inset 0 0 0 1.5px var(--gold)}
-  .cal-day.future{color:#c7bda9;cursor:default}
-  .cal-day.future:hover{background:transparent}
   .cal-day.dot::after{content:"";position:absolute;bottom:1px;width:3px;height:3px;border-radius:50%;background:var(--gold)}
   .cal-day.cur.dot::after{background:#fff}
   .cal-blank{width:20px;height:19px}
@@ -311,6 +309,10 @@
   .hp-cat{display:inline-block;font-family:var(--kai);font-size:12px;color:#fff;background:var(--seal);padding:2px 11px;border-radius:4px;letter-spacing:.16em;margin-bottom:6px}
   .hp-meta{font-family:var(--kai);font-size:14px;color:var(--ink-soft);letter-spacing:.05em;margin-bottom:7px}
   .hp-text{font-family:var(--kai);font-size:16px;line-height:1.95;color:var(--ink);white-space:pre-line;letter-spacing:.03em;max-width:33em}
+  .hp-extra{max-width:34em}
+  .hp-sec-h{font-family:var(--kai);font-size:13.5px;color:var(--seal);letter-spacing:.12em;margin:15px 0 4px;padding-bottom:3px;border-bottom:1px solid rgba(160,122,111,.28)}
+  .hp-sec{font-family:var(--sans);font-size:13.5px;color:#3f3a31;line-height:1.92;letter-spacing:.02em;white-space:pre-line}
+  .hp-reflect{color:var(--seal)}
   #hbPad{position:absolute;inset:0;z-index:2;touch-action:none;cursor:crosshair}
 
   /* 底部今日金句 */
@@ -324,6 +326,67 @@
     .hobo-main{grid-template-columns:34px 1fr}
     .hobo-tab{top:140px}
   }
+
+  /* ---- 書本攤開版面 ---- */
+  .book{display:none;margin-top:4px}
+  body.bookview .card{display:none}
+  body.bookview .book{display:block}
+  .book-spread{
+    display:grid;grid-template-columns:1fr 1fr;position:relative;
+    background:var(--card);border:1px solid var(--line);border-radius:7px;
+    box-shadow:0 20px 55px -28px rgba(80,60,30,.65);overflow:hidden
+  }
+  #bookSpread.turn{animation:pageturn .32s ease}
+  .book-spread::before{
+    content:"";position:absolute;left:50%;top:0;bottom:0;width:30px;transform:translateX(-50%);
+    background:linear-gradient(90deg,rgba(120,95,72,0),rgba(120,95,72,.14) 42%,rgba(86,64,46,.30) 50%,rgba(120,95,72,.14) 58%,rgba(120,95,72,0));
+    pointer-events:none;z-index:2
+  }
+  .book-page{padding:30px 32px 24px;min-height:452px;position:relative}
+  .book-left{background:linear-gradient(90deg,#f1ece4,#efeae2 78%,#e5ded1)}
+  .book-right{background:linear-gradient(270deg,#f1ece4,#efeae2 78%,#e5ded1)}
+
+  .bk-ribbon{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .bk-cat{font-family:var(--kai);font-size:13px;color:#fff;background:var(--seal);padding:3px 12px;border-radius:4px;letter-spacing:.16em}
+  .bk-ex{display:none;font-size:11px;color:var(--seal);border:1px solid var(--seal);padding:1px 7px;border-radius:4px;letter-spacing:.1em}
+  .bk-ex.show{display:inline-block}
+  .bk-star{margin-left:auto;background:transparent;border:none;cursor:pointer;font-size:21px;line-height:1;color:#cdbf9f;padding:0}
+  .bk-star.on{color:var(--gold)}
+  .bk-meta{font-size:13px;color:var(--ink-soft);letter-spacing:.08em;margin-bottom:2px}
+  .bk-title{font-family:var(--kai);font-size:calc(24px * var(--fs));margin:2px 0 16px;letter-spacing:.06em}
+  .bk-origin{font-family:var(--kai);font-size:calc(20px * var(--fs));line-height:2.05;color:var(--ink);white-space:pre-line;letter-spacing:.04em;margin-bottom:16px}
+  .bk-origin.center{text-align:center}.bk-origin.left{text-align:left}
+  .bk-best{background:rgba(160,122,111,.12);border-left:3px solid var(--seal);padding:9px 14px;border-radius:0 6px 6px 0;font-family:var(--kai);font-size:calc(16px * var(--fs));color:#8a6358;letter-spacing:.05em;margin-bottom:14px}
+  .bk-best b{color:var(--seal);font-weight:400;margin-right:8px;font-size:12.5px;letter-spacing:.1em}
+  .bk-tools{display:flex;gap:8px}
+  .book .speak{background:transparent;border:1px solid var(--line);color:var(--ink-soft);font-family:var(--sans);font-size:13px;padding:4px 12px;border-radius:18px;cursor:pointer}
+  .book .speak:hover{border-color:var(--gold);color:var(--ink)}
+
+  .bk-sec-h{font-family:var(--kai);font-size:15px;color:var(--seal);letter-spacing:.12em;margin:0 0 7px;padding-bottom:5px;border-bottom:1px solid rgba(160,122,111,.3)}
+  .bk-sec-h.mt{margin-top:22px}
+  .bk-sec{font-size:calc(15px * var(--fs));color:#3f3a31;line-height:1.95}
+
+  .book-extra{margin-top:14px}
+  .book-extra details{border-top:1px solid var(--line);padding:4px 0}
+  .book-extra details:last-of-type{border-bottom:1px solid var(--line)}
+
+  @media(max-width:640px){
+    .book-spread{grid-template-columns:1fr}
+    .book-spread::before{display:none}
+    .book-left{background:#efeae2;border-bottom:1px dashed var(--line)}
+    .book-right{background:#efeae2}
+    .book-page{min-height:0;padding:24px 22px}
+  }
+
+  /* ---- 每月莫蘭迪主色（--seal 隨月變；色塊用 color-mix 跟著走，不支援則回退原玫色） ---- */
+  .seal,.streak,.cat,.bk-cat,.hp-cat,.hobo-tab button,.cal-day,.cal-day.cur,
+  .hd-mon,.bk-sec-h,.hp-sec-h,details[open] summary,.best,.bk-best,.hobo-quote{
+    transition:background-color .4s ease,color .4s ease,border-color .4s ease
+  }
+  .best,.bk-best{background:color-mix(in srgb,var(--seal) 13%,transparent);color:color-mix(in srgb,var(--seal) 78%,#231e1b)}
+  .hobo-quote{background:color-mix(in srgb,var(--seal) 9%,transparent);border-top-color:color-mix(in srgb,var(--seal) 42%,transparent);color:color-mix(in srgb,var(--seal) 80%,#231e1b)}
+  .hd-hue{display:inline-flex;align-items:center;gap:5px;margin-top:7px;font-family:var(--sans);font-size:11px;color:var(--ink-soft);letter-spacing:.06em}
+  .hd-hue::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--seal);box-shadow:0 1px 2px rgba(80,60,40,.25)}
 </style>
 </head>
 <body>
@@ -337,7 +400,7 @@
       <span class="streak" id="streak">連續 0 天</span>
     </div>
     <div class="topctl">
-      <span class="viewtoggle" id="viewToggle"><button id="vClassic" class="on">📖 經典</button><button id="vHobo">🗓 手帳</button></span>
+      <span class="viewtoggle" id="viewToggle"><button id="vClassic" class="on">📖 經典</button><button id="vBook">📚 書本</button><button id="vHobo">🗓 手帳</button></span>
       <span class="progress" id="progress">已讀 <b>0</b> ／ 共 0 篇</span>
       <span class="fontctl"><button id="fsDown" title="縮小字級">A－</button><button id="fsUp" title="放大字級">A＋</button></span>
     </div>
@@ -379,6 +442,34 @@
     <details id="d-bio"><summary>作者與背景</summary><div class="sec" id="bio"></div></details>
     <details id="d-reflect" open><summary>今日一問</summary><div class="sec" id="reflect"></div></details>
   </article>
+
+  <section class="book" id="bookPage">
+    <div class="book-spread" id="bookSpread">
+      <div class="book-page book-left">
+        <div class="bk-ribbon">
+          <span class="bk-cat" id="bkCat">—</span>
+          <span class="bk-ex" id="bkEx">節選</span>
+          <button class="bk-star" id="bkStar" title="加入書籤">☆</button>
+        </div>
+        <div class="bk-meta" id="bkMeta">—</div>
+        <div class="bk-title" id="bkTitle">—</div>
+        <div class="bk-origin" id="bkOrigin"></div>
+        <div class="bk-best"><b>佳句</b><span id="bkBestText"></span></div>
+        <div class="bk-tools"><button class="speak" id="bkSpeak">🔊 朗讀原文</button></div>
+      </div>
+      <div class="book-page book-right">
+        <div class="bk-sec-h">作者與背景</div>
+        <div class="bk-sec" id="bkBio"></div>
+        <div class="bk-sec-h mt">賞析</div>
+        <div class="bk-sec" id="bkAppr"></div>
+      </div>
+    </div>
+    <div class="book-extra">
+      <details id="bk-d-notes"><summary>注釋</summary><div class="sec" id="bkNotes"></div></details>
+      <details id="bk-d-trans"><summary>白話翻譯</summary><div class="sec" id="bkTrans"></div></details>
+      <details id="bk-d-reflect" open><summary>今日一問</summary><div class="sec" id="bkReflect"></div></details>
+    </div>
+  </section>
 
   <section class="diary">
     <h3><span>今日心得 · 隨筆 <span class="savestate" id="saveState"></span></span>
@@ -425,6 +516,7 @@
             <div class="hd-mon" id="hbMon">—</div>
             <div class="hd-wd" id="hbWd">—</div>
             <div class="hd-extra" id="hbExtra">—</div>
+            <div class="hd-hue" id="hbHue"></div>
           </div>
         </div>
         <div class="hobo-cal" id="hbCal"></div>
@@ -436,6 +528,13 @@
             <span class="hp-cat" id="hbCat">—</span>
             <div class="hp-meta" id="hbMeta">—</div>
             <div class="hp-text" id="hbText"></div>
+            <div class="hp-extra">
+              <div class="hp-sec-h">白話翻譯</div><div class="hp-sec" id="hbTrans"></div>
+              <div class="hp-sec-h">注釋</div><div class="hp-sec" id="hbNotes"></div>
+              <div class="hp-sec-h">賞析</div><div class="hp-sec" id="hbAppr"></div>
+              <div class="hp-sec-h">作者與背景</div><div class="hp-sec" id="hbBio"></div>
+              <div class="hp-sec-h">今日一問</div><div class="hp-sec hp-reflect" id="hbReflect"></div>
+            </div>
           </div>
           <textarea id="hbEntry" placeholder="在這一頁寫下今天……（順著上方「今日一問」，或記下今日行程、心情）"></textarea>
           <canvas id="hbPad"></canvas>
@@ -864,6 +963,13 @@ const EN_MON=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV",
 const EN_WD=["SUN","MON","TUE","WED","THU","FRI","SAT"];
 const CAL_WD=["日","一","二","三","四","五","六"];
 const HOURS=[6,9,12,15,18,21,0,3];
+// 每月一個莫蘭迪主色（覆寫 --seal），翻月即換色做區隔；--gold 維持不變當固定搭配
+const MONTH_HUE=[
+  ["#6e7a88","黛藍"],["#84757f","藕紫"],["#74835f","柳綠"],["#9e7a6f","霧粉"],
+  ["#7e875c","苔橄"],["#6a857a","霧青"],["#a5785a","赭橘"],["#957a4d","琥珀"],
+  ["#a06f5b","磚紅"],["#8e7762","霧棕"],["#94707d","玫紫"],["#6f7088","靛灰"]
+];
+function applyMonthColor(d){document.documentElement.style.setProperty("--seal",MONTH_HUE[d.getMonth()][0]);}
 const MOON_GLYPH=["🌑","🌒","🌓","🌔","🌕","🌖","🌗","🌘"];
 const MOON_NAME=["朔","蛾眉","上弦","盈凸","望","虧凸","下弦","殘"];
 function dayOfYear(d){return Math.round((startOfDay(d)-new Date(d.getFullYear(),0,0))/DAY);}
@@ -913,7 +1019,11 @@ function fillCard(cat,label,item){
 
 // 藏書閣：自由翻閱任一篇（不寫日記）
 function viewPiece(cat,idx){
-  if(viewMode!=="classic"){viewMode="classic";localStorage.setItem("gx_view",viewMode);document.body.classList.remove("hobonichi");$("vClassic").classList.add("on");$("vHobo").classList.remove("on");}
+  if(viewMode!=="classic"){
+    viewMode="classic";localStorage.setItem("gx_view",viewMode);
+    document.body.classList.remove("hobonichi","bookview");
+    $("vClassic").classList.add("on");$("vBook").classList.remove("on");$("vHobo").classList.remove("on");
+  }
   bookMode=true;
   const b=CORPUS[cat];
   document.querySelector(".diary").style.display="none";
@@ -928,6 +1038,7 @@ let current=startOfDay(new Date());
 
 /* ---------- 渲染今日（日記模式） ---------- */
 function render(){
+  applyMonthColor(current);
   bookMode=false;
   $("bookbar").classList.remove("show");
   document.querySelector(".diary").style.display="";
@@ -937,7 +1048,7 @@ function render(){
   $("entry").value=localStorage.getItem("diary:"+keyOf(current))||"";
   updateCount(); $("saveState").textContent="";
   if(diaryMode==="draw"){sizeDiary();loadDiary();}
-  $("next").disabled=startOfDay(current)>=startOfDay(new Date());
+  $("next").disabled=false;
   updateStreak();
 }
 
@@ -1262,6 +1373,7 @@ function allDiaryDates(){
 }
 /* ---------- 手帳版面渲染 ---------- */
 function renderHobo(){
+  applyMonthColor(current);
   bookMode=false; $("bookbar").classList.remove("show");
   const {cat,label,item}=pieceFor(current);
   curId=pid(cat,item);
@@ -1274,14 +1386,20 @@ function renderHobo(){
   $("hbMon").textContent=EN_MON[current.getMonth()];
   $("hbWd").textContent=`${EN_WD[wd]} · ${WD_CH[wd]}`;
   $("hbExtra").innerHTML=`一年第 ${dayOfYear(current)} 天　<span class="moon">${mi.glyph}</span>${mi.name}`;
+  $("hbHue").textContent=`${MONTH_HUE[current.getMonth()][1]} · ${current.getMonth()+1}月之色`;
   $("hbCat").textContent=label;
   $("hbMeta").textContent=`${item.dynasty}　${item.author}〈${item.title}〉`;
   $("hbText").textContent=item.text;
+  $("hbTrans").textContent=item.trans;
+  $("hbNotes").textContent=item.notes;
+  $("hbAppr").textContent=item.appr;
+  $("hbBio").textContent=item.bio;
+  $("hbReflect").textContent=item.reflect;
   $("hbQuote").innerHTML=`「${item.best}」<span class="q-src">——〈${item.title}〉</span>`;
   buildHboTime(); buildHboCal(); buildHboTab();
   if(hoboMode==="draw"){sizeHbPad();loadHbPad();}
   else{$("hbEntry").value=localStorage.getItem("diary:"+keyOf(current))||"";$("hbSave").textContent="";}
-  $("next").disabled=startOfDay(current)>=startOfDay(new Date());
+  $("next").disabled=false;
   updateStreak();
 }
 function buildHboTime(){
@@ -1303,22 +1421,20 @@ function buildHboCal(){
     if(keyOf(cell)===keyOf(current))s.classList.add("cur");
     if(keyOf(cell)===keyOf(today))s.classList.add("today");
     if(hasContent(cell))s.classList.add("dot");
-    if(cell>today)s.classList.add("future");
-    else s.onclick=()=>{current=cell;renderHobo();window.scrollTo({top:0,behavior:"smooth"});};
+    s.onclick=()=>{current=cell;renderHobo();window.scrollTo({top:0,behavior:"smooth"});};
     grid.appendChild(s);
   }
   cal.appendChild(grid);
 }
 function buildHboTab(){
   const tab=$("hbTab"); tab.innerHTML="";
-  const y=current.getFullYear(), today=startOfDay(new Date());
+  const y=current.getFullYear();
   for(let mo=0;mo<12;mo++){
     const b=document.createElement("button"); b.textContent=mo+1;
     if(mo===current.getMonth())b.classList.add("on");
     const last=new Date(y,mo+1,0).getDate();
     const target=startOfDay(new Date(y,mo,Math.min(current.getDate(),last)));
-    if(target>today)b.disabled=true;
-    else b.onclick=()=>{current=target;renderHobo();window.scrollTo({top:0,behavior:"smooth"});};
+    b.onclick=()=>{current=target;renderHobo();window.scrollTo({top:0,behavior:"smooth"});};
     tab.appendChild(b);
   }
 }
@@ -1374,16 +1490,65 @@ function saveHbEntry(){
   updateStreak(); buildHboCal();
 }
 
+/* ---------- 書本攤開版面（左原文／右作者背景＋賞析） ---------- */
+function renderBook(){
+  applyMonthColor(current);
+  bookMode=false; $("bookbar").classList.remove("show");
+  const {cat,label,item}=pieceFor(current);
+  curId=pid(cat,item); viewItem=item; viewCat=cat;
+  $("dateText").textContent=`${current.getFullYear()}年${current.getMonth()+1}月${current.getDate()}日　${WD_CH[current.getDay()]}`;
+  const rd=getSet("gx_read"), id=pid(cat,item);
+  if(!rd.has(id)){rd.add(id);putSet("gx_read",rd);}
+  $("progress").innerHTML=`已讀 <b>${getSet("gx_read").size}</b> ／ 共 ${TOTAL} 篇`;
+  $("bkCat").textContent=label;
+  $("bkEx").classList.toggle("show",!!item.excerpt);
+  $("bkMeta").textContent=`${item.dynasty}　${item.author}`;
+  $("bkTitle").textContent=item.title;
+  $("bkOrigin").textContent=item.text;
+  const maxLen=Math.max(...item.text.split("\n").map(l=>l.length));
+  $("bkOrigin").className="bk-origin "+(maxLen<=14?"center":"left");
+  $("bkBestText").textContent=item.best;
+  $("bkBio").textContent=item.bio;
+  $("bkAppr").textContent=item.appr;
+  $("bkNotes").textContent=item.notes;
+  $("bkTrans").textContent=item.trans;
+  $("bkReflect").textContent=item.reflect;
+  const marked=getSet("gx_marks").has(id);
+  $("bkStar").classList.toggle("on",marked); $("bkStar").textContent=marked?"★":"☆";
+  const sp=$("bookSpread"); sp.classList.remove("turn"); void sp.offsetWidth; sp.classList.add("turn");
+  $("entry").value=localStorage.getItem("diary:"+keyOf(current))||"";
+  updateCount(); $("saveState").textContent="";
+  if(diaryMode==="draw"){sizeDiary();loadDiary();}
+  $("next").disabled=false;
+  updateStreak();
+}
+$("bkSpeak").addEventListener("click",()=>{
+  if(!("speechSynthesis" in window)){alert("此瀏覽器不支援朗讀功能。");return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance((viewItem?viewItem.text:"").replace(/\n/g,"，"));
+  u.lang="zh-TW"; u.rate=.85; speechSynthesis.speak(u);
+});
+$("bkStar").onclick=()=>{
+  if(!viewItem)return;
+  const s=getSet("gx_marks"), id=pid(viewCat,viewItem);
+  s.has(id)?s.delete(id):s.add(id); putSet("gx_marks",s);
+  $("bkStar").classList.toggle("on",s.has(id)); $("bkStar").textContent=s.has(id)?"★":"☆";
+};
+
 /* ---------- 版面切換 ---------- */
-function refresh(){ if(viewMode==="hobo") renderHobo(); else render(); }
+function refresh(){ if(viewMode==="hobo") renderHobo(); else if(viewMode==="book") renderBook(); else render(); }
 function applyView(){
   document.body.classList.toggle("hobonichi",viewMode==="hobo");
+  document.body.classList.toggle("bookview",viewMode==="book");
   $("vClassic").classList.toggle("on",viewMode==="classic");
+  $("vBook").classList.toggle("on",viewMode==="book");
   $("vHobo").classList.toggle("on",viewMode==="hobo");
   refresh();
 }
-$("vClassic").onclick=()=>{if(viewMode!=="classic"){viewMode="classic";localStorage.setItem("gx_view",viewMode);applyView();window.scrollTo({top:0,behavior:"smooth"});}};
-$("vHobo").onclick=()=>{if(viewMode!=="hobo"){viewMode="hobo";localStorage.setItem("gx_view",viewMode);applyView();window.scrollTo({top:0,behavior:"smooth"});}};
+function setView(v){if(viewMode!==v){viewMode=v;localStorage.setItem("gx_view",viewMode);applyView();window.scrollTo({top:0,behavior:"smooth"});}}
+$("vClassic").onclick=()=>setView("classic");
+$("vBook").onclick=()=>setView("book");
+$("vHobo").onclick=()=>setView("hobo");
 
 setDiaryMode(diaryMode==="draw");
 setHoboMode(hoboMode==="draw");

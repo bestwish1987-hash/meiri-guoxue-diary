@@ -1,5 +1,61 @@
 # 開發日誌 · DEVLOG
 
+## 2026-06-13 — Session 5：每月莫蘭迪主色
+
+### 做了什麼
+- 需求：「每個月用不同的莫蘭迪色做區隔」（仿 ほぼ日手帳 每月一色）。
+- `MONTH_HUE[12]`＝[hex,色名]：黛藍/藕紫/柳綠/霧粉/苔橄/霧青/赭橘/琥珀/磚紅/霧棕/玫紫/靛灰（冬藍→春綠→夏金→秋赭的莫蘭迪漸變）。
+- `applyMonthColor(d)` 用 `documentElement.style.setProperty("--seal", …)` 覆寫主色；在 render / renderHobo / renderBook 開頭依 `current.getMonth()` 套用。因 `--seal` 是全 app 主色變數，印章「日新」、類別徽章、月曆 cur/today、月份 tab、章節標題、佳句框邊、頁底金句等一起換色。`--gold` 不動，當固定搭配。
+- 佳句框 `.best/.bk-best`、金句 `.hobo-quote` 的「玫色」底/字本來是寫死 `rgba(160,122,111,…)`，改用 `color-mix(in srgb,var(--seal) X%,…)` 跟著月色；舊瀏覽器不支援 color-mix 時，宣告無效會自動回退到前一條原 rgba 規則（graceful degradation）。
+- 手帳日期區塊加 `.hd-hue` 小色票（●＋「霧青 · 6月之色」）；切月加 .4s 過渡。
+- **解開未來導覽**（接著的需求「讓後一日可以點、12 個月都到得了」）：三視圖 `$("next").disabled` 改恒 `false`（原本鎖在 ≤今天）；buildHboTab 移除 `target>today` 的 disable → 12 月 tab 全可點；buildHboCal 移除 `cell>today→future`（連同死掉的 `.cal-day.future` CSS）→ 未來日皆可點。今天仍有月曆光環＋「今天」鈕。原「日記不可寫未來」的限制就此放寬（手帳可預寫；連續天數由今日往回算不受影響）。
+
+### 驗證方式
+- node --check 通過。
+- 無頭瀏覽器：12 個月 `applyMonthColor` 後讀 `--seal` 皆正確；**白字對比 3.58→調整後最低約 3.8–4.8**（原 seal #a07a6f≈3.86 為基準，八月 #9d8456 偏淺→改 #957a4d）；6月(霧青#6a857a)→5月(苔橄#7e875c)翻月即時換色＋色票文字更新；`color-mix` 解析成功（quote bg 出現 `color(srgb …/0.09)`）；經典/書本/手帳三視圖的徽章/印章/佳句框皆套月色；零 console 錯誤。
+
+### 現狀
+- 三視圖 + 每月主色。40 篇不變。repo 待 commit（Session 3-5 = v3）。
+
+---
+
+## 2026-06-13 — Session 4：手帳頁併入全文內容＋整片可手寫
+
+### 做了什麼
+- 需求：「內容跟手帳放在一起，要（處處）皆可手寫」。原本手帳書寫區只有 類別/朝代作者/原文，現把 **白話翻譯／注釋／賞析／作者與背景／今日一問** 也鋪進 `.hobo-piece`（全部 `pointer-events:none`）。
+- 手寫畫布 `#hbPad`（絕對定位 `inset:0`、z-index:2、pointer-events:auto）本就覆蓋整個 `.hobo-zone`；內容變多→zone 變高→`sizeHbPad` 把 canvas 撐到 `zone.clientHeight`，於是**整片內容都被畫布蓋住＝處處可手寫**（在印好的原文/賞析/任一段上批註）。
+- 內容字級刻意維持固定（不吃 `--fs`），避免 A−/A+ 後內容高度變動、與既存手寫筆跡錯位。
+- 打字模式 `#hbEntry` 接在全文下方（讀完再打字）。
+- `renderHobo` 多填 hbTrans/hbNotes/hbAppr/hbBio/hbReflect；新增 CSS `.hp-extra/.hp-sec-h/.hp-sec/.hp-reflect`。
+
+### 驗證方式
+- node --check 通過。
+- 無頭瀏覽器：五段內容皆填入；canvas 高(926)==zone 高(926)>=內容高(900) 全覆蓋；canvas z-index2/pointer-events auto、piece pointer-events none；以 PointerEvent 在「賞析」區(y=627)與「原文」區實畫一筆都寫得進去並存 gx_hobo；打字模式 textarea 在全文下方、內容仍可見；零 console 錯誤。
+
+### 現狀
+- 手帳頁＝完整國學全文鋪在點陣紙上＋整片可手寫批註/打字。三視圖、40 篇不變。repo 待 commit（連同 Session 3 書本一起 = v3）。
+
+---
+
+## 2026-06-13 — Session 3：書本攤開版面（第三視圖）
+
+### 做了什麼
+1. **第三個切換鈕**「📖 經典 / 📚 書本 / 🗓 手帳」：`gx_view` 新增值 `book`，`body.bookview` 切主題；`applyView`/`refresh` 加 book 分支，`setView(v)` 收斂三鈕邏輯。
+2. **兩頁攤開** `#bookPage`：CSS Grid `1fr 1fr` 兩頁等寬，中央 `::before` 書脊漸層、左右頁內側摺痕漸層（`linear-gradient` 往書脊變深），grid stretch 使兩頁等高如真開卷。
+3. **renderBook**：左頁＝類別/節選/☆書籤/朝代作者/標題/原文/佳句/🔊朗讀；右頁＝作者與背景＋賞析；下方 book-extra 放注釋／白話／今日一問（維持可摺疊）。書本模式 `.diary` 照常顯示（可寫今日心得）；只取代 `.card`。
+4. **書籤 `#bkStar`**（共用 gx_marks）、朗讀 `#bkSpeak`（共用 viewItem.text）；字級 `--fs` 用 calc 對書本生效。
+5. **響應式**：≤640px → `grid-template-columns:1fr` 兩頁上下堆疊、書脊隱藏。
+
+### 驗證方式
+- node --check 通過。
+- 無頭瀏覽器 `preview_eval`：兩頁幾何（720 = 359+359 等寬、同 top、無縫）、木蘭詩 422 字兩頁等高 1635 不溢出、書籤存讀、prev/today/next 導覽、經典/書本/手帳三視圖 display 互斥正確、手機 375px 堆疊+書脊隱藏；零 console 錯誤。
+- **踩到的坑**：`.book` 既是區塊 class 又拿來當 body class（`body.book`），`.book{display:none}` 連 `<body>` 一起 display:none → 整頁 0 寬。幾何量測（htmlW=1280 但 bodyW=0、bodyDisplay=none）抓到；body class 改 `bookview`（比照 hobo 的 `.hobo`/`hobonichi` 不同名）即解。（提醒：screenshot 在本環境逾時，全靠幾何/功能量測，這種「整頁被隱藏」靠截圖反而可能誤判。）
+
+### 現狀
+- 三視圖：經典（單欄漸進）／書本（兩頁攤開）／手帳（一日一頁）。40 篇不變。repo 待 commit（v3）。
+
+---
+
 ## 2026-06-13 — Session 2：Hobonichi 手帳一日一頁版面
 
 ### 做了什麼
@@ -51,7 +107,7 @@
 3. **擴到 366 篇不重複**：Wikisource/ctext 逐字查證（禁杜撰）；建議把 `CORPUS` 抽成 `data/corpus.json` 方便分批擴充。
 
 ### localStorage keys
-`gx_start`｜`diary:YYYY-MM-DD`(打字)｜`gx_canvas:YYYY-MM-DD`(隨筆畫布)｜`gx_hobo:YYYY-MM-DD`(手帳頁手寫，Session 2)｜`gx_diarymode`｜`gx_hobomode`(手帳手寫/打字，Session 2)｜`gx_view`(經典/手帳，Session 2)｜`gx_read`/`gx_marks`(篇id)｜`gx_anno`(劃線批註,依篇)｜`gx_ink`(詩上手寫,依篇)｜`gx_font`
+`gx_start`｜`diary:YYYY-MM-DD`(打字)｜`gx_canvas:YYYY-MM-DD`(隨筆畫布)｜`gx_hobo:YYYY-MM-DD`(手帳頁手寫，Session 2)｜`gx_diarymode`｜`gx_hobomode`(手帳手寫/打字，Session 2)｜`gx_view`(經典/書本/手帳，Session 2-3)｜`gx_read`/`gx_marks`(篇id)｜`gx_anno`(劃線批註,依篇)｜`gx_ink`(詩上手寫,依篇)｜`gx_font`
 
 ### 原則
 - **原文一律查證、禁憑記憶杜撰**（用字、作者、出處錯了就失去意義）。
