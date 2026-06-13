@@ -20,7 +20,8 @@
 - **重點**：file:// 桌面版無法登入 → 三台都改用 https PWA 才能共用同一份。firebaseConfig 不是機密(可進公開 repo)，安全靠規則+登入。
 
 ### 現狀
-- 同步骨架已 push（inert，等 config）。repo 待 commit（v3.4）。
+- 同步骨架已 push（inert，等 config）。v3.4。
+- **v3.5：使用者建好 Firebase 專案 `meiri-guoxue`(Spark免費) → 貼 firebaseConfig 進 module。localhost 實測 Firebase SDK 載入成功、按鈕變「用 Google 登入同步」、零 console 錯誤**。待使用者完成 console 步驟 3-6（Google 登入/Firestore/規則/Authorized domains 加 github.io）後，於 https PWA 登入即同步。apiKey 進公開 repo 安全(靠 Firestore 規則+登入)。
 
 ---
 

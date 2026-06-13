@@ -1635,12 +1635,12 @@ maybeAutoBackup();
 <script type="module">
 /* ---------- 雲端同步（Firebase；填入 firebaseConfig 後啟用，三裝置共用） ---------- */
 const firebaseConfig = {
-  /* ↓↓↓ 貼上你 Firebase 專案的「Web app」設定（Project settings → Your apps）↓↓↓
-  apiKey: "...",
-  authDomain: "你的專案.firebaseapp.com",
-  projectId: "你的專案id",
-  appId: "..."
-  ↑↑↑ 留空＝雲端同步停用，app 照常本機運作 */
+  apiKey: "AIzaSyBlf_m7wK9P9y-12VPAu_it_k2kT-tUKxQ",
+  authDomain: "meiri-guoxue.firebaseapp.com",
+  projectId: "meiri-guoxue",
+  storageBucket: "meiri-guoxue.firebasestorage.app",
+  messagingSenderId: "446829945730",
+  appId: "1:446829945730:web:7609ccbddee63fb78e259b"
 };
 const SYNC_PREFIX=["diary:","gx_canvas:","gx_hobo:"], SYNC_KEY=["gx_ink","gx_anno","gx_marks","gx_read","gx_start"];
 const isSynced=k=>SYNC_KEY.includes(k)||SYNC_PREFIX.some(p=>k.startsWith(p));
